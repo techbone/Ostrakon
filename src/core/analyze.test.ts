@@ -68,6 +68,17 @@ describe("evidence and uncertainty", () => {
       analyze(data).findings.filter((f) => f.kind === "reuse"),
     ).toHaveLength(0);
   });
+  it("keeps script amounts without grouping unknown addresses", () => {
+    const data = sample("roundtrip");
+    for (const tx of data.transactions)
+      for (const io of [...tx.inputs, ...tx.outputs]) io.address = null;
+    const loaded = parseDataset(JSON.stringify(data));
+    expect(analyze(loaded).findings.filter((f) => f.kind === "reuse")).toEqual(
+      [],
+    );
+    expect(candidates(loaded)).toHaveLength(1);
+    expect(loaded.transactions[0].inputs[0].valueZat).not.toBeNull();
+  });
   it("simulation never mutates evidence and can remove only heuristic matches", () => {
     const data = sample("roundtrip"),
       original = JSON.stringify(data);

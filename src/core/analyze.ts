@@ -1,6 +1,6 @@
 import type { Dataset, Pool, Transaction } from "./schema";
 
-export const RULE_VERSION = "ostrakon/0.1.0";
+export const RULE_VERSION = "ostrakon/0.1.1";
 export interface Parameters {
   windowHours: number;
   toleranceZat: string;
@@ -130,6 +130,7 @@ export function analyze(
     if (tx.confirmations < 2 || tx.coinbase || ![4, 5, 6].includes(tx.version))
       continue;
     for (const io of [...tx.inputs, ...tx.outputs]) {
+      if (io.address === null) continue;
       const ids = addresses.get(io.address) ?? new Set<string>();
       ids.add(tx.txid);
       addresses.set(io.address, ids);

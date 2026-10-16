@@ -28,7 +28,10 @@ const timestamp = z
   .datetime({ offset: true })
   .refine((v) => Number.isFinite(Date.parse(v)), "Invalid timestamp");
 const io = z
-  .object({ address: z.string().min(1).max(128), valueZat: amount.nullable() })
+  .object({
+    address: z.string().min(1).max(128).nullable(),
+    valueZat: amount.nullable(),
+  })
   .strict();
 export const transactionSchema = z
   .object({

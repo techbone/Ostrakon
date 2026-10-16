@@ -6,10 +6,12 @@ Checked 16 October 2026.
 
 - TypeScript strict compilation passed.
 - Vite production build passed; output is static assets plus a module worker.
-- 17 unit tests passed. Cases include competing candidates, no-match uncertainty,
+- 18 unit tests passed. Cases include competing candidates, no-match uncertainty,
   pool mismatch, mixed/migration flows, missing amounts, unsupported versions,
   low confirmations, timestamp windows, deterministic ordering, exact tolerance
   boundaries, duplicate IDs, oversized input, report re-import and integer money.
+  Script outputs with no single decoded address retain their amount and do not
+  create repeated-address findings from null values (rule version 0.1.1).
 - npm install audit reports zero vulnerabilities after updating the test runner.
 - Git whitespace checks passed.
 

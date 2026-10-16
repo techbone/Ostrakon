@@ -28,7 +28,7 @@ Ostrakon cannot verify it. Source timestamps must include a timezone.
 - `confirmations`: nonnegative integer at snapshot time, not live confirmations
 - `coinbase`: boolean
 - `feeZat`: unsigned integer string, or `null` if unknown
-- `inputs`, `outputs`: arrays, at most 16 each, containing `{ address: string, valueZat: string | null }`
+- `inputs`, `outputs`: arrays, at most 16 each, containing `{ address: string | null, valueZat: string | null }`
 - `poolDeltas`: at most one item per pool, `{ pool: "sapling" | "orchard" | "ironwood", valueZat: signedIntegerString }`
 
 All amounts are integer zatoshis. 100,000,000 zatoshis = 1 ZEC. No decimal points,
@@ -39,6 +39,10 @@ opposite sign: an adapter must explicitly convert it. Do not copy raw fields by 
 
 Transparent input amounts must come from resolved previous outputs. Never infer
 individual shielded note values or addresses. A net pool delta is not a note value.
+Use a null address when a transparent script has no single decoded address (for
+example, a bare public-key or multisig script). Preserve its known amount. Null
+addresses never contribute to repeated-address findings; they are not one shared
+address. Use a null amount only when the value itself is unresolved.
 
 ## Accounting and scope
 

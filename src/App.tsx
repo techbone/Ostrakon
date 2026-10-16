@@ -194,7 +194,7 @@ export default function App() {
     (tx) =>
       tx.txid.includes(filter.toLowerCase()) ||
       [...tx.inputs, ...tx.outputs].some((io) =>
-        io.address.toLowerCase().includes(filter.toLowerCase()),
+        io.address?.toLowerCase().includes(filter.toLowerCase()),
       ),
   );
   const openTransaction = (id: string) =>
@@ -1238,7 +1238,7 @@ export default function App() {
                 {transaction[kind].length ? (
                   transaction[kind].map((io, i) => (
                     <div className="io-row" key={i}>
-                      <code>{io.address}</code>
+                      <code>{io.address ?? "No single decoded address"}</code>
                       <strong>
                         {io.valueZat === null
                           ? "Unknown"
