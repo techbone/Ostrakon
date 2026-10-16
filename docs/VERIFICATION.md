@@ -25,12 +25,27 @@ Checked 16 October 2026.
 - Two additional integration tests execute Python normalization, validate its
   output with the actual browser schema, and run the analysis engine. The synthetic
   round trip produces one candidate; the archived mainnet coinbase produces none.
-  The full Vitest suite now has 20 passing tests.
+  The analysis and export integration tests total 20 passing tests.
 - The archived [Zebra fixture](../tests/fixtures/ZEBRA_NOTICE.md) is pinned to a
   source revision with a checksum and retained license. Its block 1 data verifies
   historical response handling only. Modern-pool transcripts are synthetic.
 - A temporary loopback HTTP server exercises real HTTP transport. No external node
   is needed for these tests. The exporter has not been run against a live node.
+
+## Dataset-switch regression
+
+The browser import of the archived fixture exposed a source-switch race: findings
+from the preceding dataset rendered against new transaction IDs before the worker
+effect cleared them. The evidence panel dereferenced a missing transaction.
+
+Results are now bound to the dataset, parameters and run that produced them.
+Retired or cancelled workers cannot publish results, and reports remain disabled
+until the current analysis finishes. Four DOM regression tests cover importing
+disjoint IDs and null addresses, late worker responses, changed rule settings and
+cancellation. The complete Vitest suite totals 24 tests. JSDOM is development-only.
+
+The import dialog and methodology now link to the node-export guide. Its updated
+layout was inspected in the production preview with the restrictive CSP.
 
 ## Browser checks
 

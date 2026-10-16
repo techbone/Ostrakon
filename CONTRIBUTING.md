@@ -3,7 +3,8 @@
 Work architecture first and deliver one coherent increment at a time. Keep
 verified behavior separate from plans, example data, and untested assumptions.
 
-Use Node.js 22.12+, Python 3.10+ and `npm ci`. No Python packages are required.
+Use Node.js 22.22.2+ on the 22.x line, Python 3.10+ and `npm ci`.
+See `package.json` for other supported Node releases. No Python packages are required.
 Run `npm run check` and `npm run build` before
 committing application changes. Add focused regression tests for analysis or
 validation behavior; do not add tests that only mirror markup.

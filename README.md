@@ -5,7 +5,8 @@ possible amount/time correlations, and understand the limits of the evidence.
 
 ## Run
 
-Requires Node.js 22.12+ and npm. The optional node exporter and full check suite
+Use Node.js 22.22.2+ on the 22.x line (or a newer release supported by the package's
+`engines` field) and npm. The optional node exporter and full check suite
 also require Python 3.10+; no Python packages are needed.
 
 ```sh

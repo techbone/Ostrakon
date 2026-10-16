@@ -932,6 +932,38 @@ h1 em {
   font-size: 10px;
   color: #8a927e;
 }
+.node-import-guide {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.node-import-guide > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--ink);
+}
+.node-import-guide strong {
+  font-size: 13px;
+}
+.node-import-guide p {
+  margin: 6px 0 9px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #63705d;
+}
+.node-import-guide a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
 .import-options {
   display: flex;
   justify-content: space-between;

@@ -31,6 +31,7 @@ import {
 import {
   analyze,
   defaults,
+  RULE_VERSION,
   simulate,
   type Analysis,
   type Finding,
@@ -121,7 +122,12 @@ export default function App() {
   const [sampleKey, setSampleKey] = useState<SampleKey>("roundtrip");
   const [builtIn, setBuiltIn] = useState(true);
   const [parameters, setParameters] = useState<Parameters>(defaults);
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [completed, setCompleted] = useState<{
+    dataset: Dataset;
+    parameters: Parameters;
+    run: number;
+    result: Analysis;
+  } | null>(null);
   const [selectedId, setSelectedId] = useState("");
   const [modal, setModal] = useState<
     "import" | "rules" | "export" | "dataset" | null
@@ -138,9 +144,16 @@ export default function App() {
   const workerRef = useRef<Worker | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const isSample = data.source.kind === "sample";
+  // Effects run after rendering. Hide old evidence immediately when inputs change.
+  const analysis =
+    completed?.dataset === data &&
+    completed.parameters === parameters &&
+    completed.run === run
+      ? completed.result
+      : null;
 
   useEffect(() => {
-    setAnalysis(null);
+    setCompleted(null);
     setBusy(true);
     setCancelled(false);
     setError("");
@@ -148,23 +161,34 @@ export default function App() {
       new URL("./core/analysis.worker.ts", import.meta.url),
       { type: "module" },
     );
+    let active = true;
     workerRef.current = worker;
     worker.onmessage = (event) => {
+      if (!active || event.data.id !== run) return;
       setBusy(false);
       if (event.data.error) setError(event.data.error);
       else {
-        setAnalysis(event.data.result);
+        setCompleted({
+          dataset: data,
+          parameters,
+          run,
+          result: event.data.result,
+        });
         setSelectedId(event.data.result.findings[0]?.id ?? "");
       }
     };
     worker.onerror = () => {
+      if (!active) return;
       setBusy(false);
       setError(
         "The analysis worker could not start. Reload the page to try again.",
       );
     };
     worker.postMessage({ id: run, dataset: data, parameters });
-    return () => worker.terminate();
+    return () => {
+      active = false;
+      worker.terminate();
+    };
   }, [data, parameters, run]);
   useEffect(() => {
     if (notice) {
@@ -210,6 +234,8 @@ export default function App() {
         throw new Error("File is too large. Maximum size is 2 MB.");
       const next = parseDataset(await file.text());
       setData(next);
+      setTransaction(null);
+      setSelectedId("");
       setBuiltIn(false);
       setFilter("");
       setView("overview");
@@ -227,6 +253,8 @@ export default function App() {
     setSampleKey(key);
     setBuiltIn(true);
     setData(sample(key));
+    setTransaction(null);
+    setSelectedId("");
     setFilter("");
     setError("");
   }
@@ -436,7 +464,13 @@ export default function App() {
               Analyzing records locally…{" "}
               <button
                 onClick={() => {
-                  workerRef.current?.terminate();
+                  const worker = workerRef.current;
+                  if (worker) {
+                    worker.onmessage = null;
+                    worker.onerror = null;
+                    worker.terminate();
+                    workerRef.current = null;
+                  }
                   setBusy(false);
                   setCancelled(true);
                 }}
@@ -891,7 +925,7 @@ export default function App() {
                   shielded activity, identify people, or certify anonymity.
                 </p>
                 <span className="tag green">
-                  RULE ENGINE · {analysis?.ruleVersion ?? "ostrakon/0.1.0"}
+                  RULE ENGINE · {analysis?.ruleVersion ?? RULE_VERSION}
                 </span>
               </div>
               <div className="method-cards">
@@ -943,6 +977,13 @@ export default function App() {
                 </a>
                 <a href="/DATA_FORMAT.md" target="_blank" rel="noreferrer">
                   Ostrakon dataset format · v1 <ExternalLink size={14} />
+                </a>
+                <a
+                  href="https://github.com/techbone/Ostrakon/blob/main/docs/NODE_EXPORT.md"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Export a snapshot from your node <ExternalLink size={14} />
                 </a>
                 <button
                   className="text-link"
@@ -1023,6 +1064,23 @@ export default function App() {
             Analyze an Ostrakon v1 JSON file locally. Do not import a wallet
             backup, seed phrase, or viewing key.
           </p>
+          <div className="node-import-guide">
+            <FileJson size={19} />
+            <div>
+              <strong>Start with a snapshot from your node</strong>
+              <p>
+                The optional exporter reads a small block range into a local
+                JSON file. Your node connection stays outside this tab.
+              </p>
+              <a
+                href="https://github.com/techbone/Ostrakon/blob/main/docs/NODE_EXPORT.md"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Read the export guide <ArrowUpRight size={14} />
+              </a>
+            </div>
+          </div>
           <button
             className="dropzone"
             onClick={() => fileRef.current?.click()}
