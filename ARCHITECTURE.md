@@ -73,6 +73,8 @@ Use integer zatoshi values internally, serialized as decimal strings. Keep block
 height, block hash, provider, observed time, network, and supported transaction
 version with each record. Resolve transparent previous outputs before attributing
 input amounts. Do not invent addresses or values for shielded outputs.
+Reject contradictory hash/timestamp claims at one height and hashes reused at
+different heights. A backwards clock between different blocks is allowed.
 
 Each dataset declares a block interval, pagination completion, missing records,
 and retrieval time. Each finding has a rule version, evidence transaction IDs,

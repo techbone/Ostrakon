@@ -1,6 +1,7 @@
 import type { Dataset, Pool, Transaction } from "./schema";
+import { exclude, type ExcludedTransaction } from "./exclusions";
 
-export const RULE_VERSION = "ostrakon/0.1.2";
+export const RULE_VERSION = "ostrakon/0.1.3";
 export interface Parameters {
   windowHours: number;
   toleranceZat: string;
@@ -27,44 +28,44 @@ export interface Finding {
 export interface Analysis {
   findings: Finding[];
   flows: Flow[];
-  excluded: { txid: string; reason: string }[];
+  excluded: ExcludedTransaction[];
   parameters: Parameters;
   ruleVersion: string;
 }
 
-function flowOf(tx: Transaction): Flow | string {
-  if (tx.coinbase) return "Coinbase is excluded from payment correlations.";
+function flowOf(tx: Transaction): Flow | ExcludedTransaction {
+  if (tx.coinbase) return exclude(tx.txid, "coinbase");
   if (![4, 5, 6].includes(tx.version))
-    return "Unsupported transaction version.";
-  if (tx.confirmations < 2)
-    return "Fewer than two confirmations in this snapshot.";
+    return exclude(tx.txid, "unsupported_version");
+  if (tx.confirmations < 2) return exclude(tx.txid, "low_confirmations");
   if (tx.poolDeltas.length !== 1)
-    return tx.poolDeltas.length
-      ? "Multiple pools: migration or mixed flow."
-      : "No shielded pool movement.";
+    return exclude(
+      tx.txid,
+      tx.poolDeltas.length ? "multiple_pools" : "no_pool_movement",
+    );
   const { pool, valueZat } = tx.poolDeltas[0];
   if (
     (tx.version === 4 && pool !== "sapling") ||
     (tx.version === 5 && pool === "ironwood")
   )
-    return "Pool is incompatible with this transaction version.";
+    return exclude(tx.txid, "incompatible_pool");
   if (
     tx.feeZat === null ||
     [...tx.inputs, ...tx.outputs].some((io) => io.valueZat === null)
   )
-    return "Missing fee or unresolved transparent amount.";
+    return exclude(tx.txid, "unresolved_amounts");
   const delta = BigInt(valueZat),
     fee = BigInt(tx.feeZat);
   const sum = (ios: Transaction["inputs"]) =>
     ios.reduce((n, io) => n + BigInt(io.valueZat!), 0n);
   if (sum(tx.inputs) - sum(tx.outputs) !== delta + fee)
-    return "Input, output, fee and pool accounting do not balance.";
+    return exclude(tx.txid, "unbalanced_accounting");
   if (delta > 0n && (!tx.inputs.length || tx.outputs.length))
-    return "Mixed transparent flow or change; excluded from the simple rule.";
+    return exclude(tx.txid, "transparent_change");
   if (delta < 0n && !tx.inputs.length && !tx.outputs.length)
-    return "No transparent payout; public net outflow covers only the fee. Internal shielded payments remain hidden.";
+    return exclude(tx.txid, "no_transparent_payout");
   if (delta < 0n && (tx.inputs.length || tx.outputs.length !== 1))
-    return "Mixed flow or batched payout; excluded from the simple rule.";
+    return exclude(tx.txid, "mixed_payout");
   return {
     txid: tx.txid,
     direction: delta > 0n ? "shield" : "deshield",
@@ -94,8 +95,7 @@ export function analyze(
   );
   for (const tx of transactions) {
     const flow = flowOf(tx);
-    if (typeof flow === "string")
-      excluded.push({ txid: tx.txid, reason: flow });
+    if ("code" in flow) excluded.push(flow);
     else flows.push(flow);
   }
   for (const entry of flows.filter((f) => f.direction === "shield")) {

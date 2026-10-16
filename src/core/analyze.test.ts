@@ -6,6 +6,23 @@ import { sample } from "./samples";
 const candidates = (data = sample("roundtrip")) =>
   analyze(data).findings.filter((f) => f.kind === "candidate");
 describe("evidence and uncertainty", () => {
+  it("classifies every record once without suppressing other findings", () => {
+    const data = sample("roundtrip");
+    const result = analyze(data);
+    const ids = [...result.flows, ...result.excluded].map((item) => item.txid);
+    expect(new Set(ids).size).toBe(data.transactions.length);
+    expect(ids).toHaveLength(data.transactions.length);
+    const transparent = data.transactions[3].txid;
+    expect(
+      result.excluded.find((item) => item.txid === transparent)?.code,
+    ).toBe("no_pool_movement");
+    expect(
+      result.findings.some(
+        (finding) =>
+          finding.kind === "reuse" && finding.evidence.includes(transparent),
+      ),
+    ).toBe(true);
+  });
   it("finds the known round trip without asserting ownership", () => {
     const result = candidates();
     expect(result).toHaveLength(1);
@@ -94,6 +111,29 @@ describe("evidence and uncertainty", () => {
   });
 });
 describe("bounded, exact input", () => {
+  it("rejects conflicting block metadata instead of inventing a timeline", () => {
+    for (const conflict of ["hash", "time", "height"]) {
+      const data = sample("roundtrip");
+      const [first, second] = data.transactions;
+      if (conflict === "height") second.blockHash = first.blockHash;
+      else {
+        second.blockHeight = first.blockHeight;
+        if (conflict === "time") second.blockHash = first.blockHash;
+      }
+      expect(() => parseDataset(JSON.stringify(data))).toThrow(
+        conflict === "height" ? "different heights" : "Conflicting",
+      );
+    }
+  });
+  it("accepts backwards block clocks and equivalent timezone representations", () => {
+    const data = sample("roundtrip");
+    data.transactions[1].timestamp = "2026-10-15T08:00:00Z";
+    expect(() => parseDataset(JSON.stringify(data))).not.toThrow();
+    data.transactions[1].blockHeight = data.transactions[0].blockHeight;
+    data.transactions[1].blockHash = data.transactions[0].blockHash;
+    data.transactions[1].timestamp = "2026-10-15T10:00:00+01:00";
+    expect(() => parseDataset(JSON.stringify(data))).not.toThrow();
+  });
   it("returns validation errors instead of throwing during numeric coercion", () => {
     for (const value of ["abc", "0.1", "1e100", "--1"]) {
       const data = sample("roundtrip");

@@ -20,6 +20,10 @@ Download the synthetic example from Import dataset to see a complete file.
 `sample` means synthetic, even if a file was imported. Use `import` for real exported
 records. `complete` is the file author's assertion about the declared block interval;
 Ostrakon cannot verify it. Source timestamps must include a timezone.
+Records at one block height must agree on block hash and timestamp. Equivalent
+timezone representations of the same instant are accepted. A block hash cannot
+appear at different heights. Block timestamps may move backwards between heights;
+the timeline follows height rather than inferring payment order from time.
 
 ## Transaction
 
@@ -67,3 +71,9 @@ Reports are a separate envelope containing `dataset` and `analysis`. You can
 re-import a version 1 report: Ostrakon extracts its dataset, discards the saved
 findings and re-runs the current rules. A single-record export is for inspection
 and is not a complete dataset. Files are held only in memory and cleared on refresh.
+
+The report's analysis includes `excluded` records with `txid`, a stable `code`, and
+a human-readable `reason`. Each record has its first blocking reason for the simple
+amount/time rule; this is not an exhaustive validation result or a privacy verdict.
+An excluded record can still contribute to other findings such as address reuse.
+See the [exclusion definitions](https://github.com/techbone/Ostrakon/blob/main/src/core/exclusions.ts).

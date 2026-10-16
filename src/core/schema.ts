@@ -105,6 +105,8 @@ export const datasetSchema = z
         message: "Duplicate transaction IDs",
         path: ["transactions"],
       });
+    const blocks = new Map<number, { hash: string; time: number }>();
+    const heights = new Map<string, number>();
     data.transactions.forEach((tx, i) => {
       if (
         tx.blockHeight < data.coverage.fromHeight ||
@@ -115,6 +117,31 @@ export const datasetSchema = z
           message: "Transaction outside declared block interval",
           path: ["transactions", i, "blockHeight"],
         });
+      const previous = blocks.get(tx.blockHeight);
+      if (
+        previous &&
+        (previous.hash !== tx.blockHash ||
+          previous.time !== Date.parse(tx.timestamp))
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Conflicting hash or timestamp for one block height",
+          path: ["transactions", i, "blockHash"],
+        });
+      if (
+        heights.has(tx.blockHash) &&
+        heights.get(tx.blockHash) !== tx.blockHeight
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Block hash is reused at different heights",
+          path: ["transactions", i, "blockHash"],
+        });
+      blocks.set(tx.blockHeight, {
+        hash: tx.blockHash,
+        time: Date.parse(tx.timestamp),
+      });
+      heights.set(tx.blockHash, tx.blockHeight);
     });
   });
 
