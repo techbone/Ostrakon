@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "name": "Mainnet · block 3,520,054",
+  "network": "mainnet",
+  "source": {
+    "kind": "import",
+    "label": "Tatum public Zebra · recorded 16 Oct 2026",
+    "retrievedAt": "2026-10-16T18:25:03.884248Z"
+  },
+  "coverage": {
+    "fromHeight": 3520054,
+    "toHeight": 3520054,
+    "complete": true,
+    "note": "All 7 transactions from 1 consecutive blocks. Snapshot tip 3520076 (00000000003f5aca5123ef836c9569268750a562adeb1230b91f59d08775ac2b). Block linkage and hashes rechecked against node. 0 unresolved previous outputs. Node claims only; no independent consensus verification."
+  },
+  "transactions": [
+    {
+      "txid": "759dc8b385b3e32570e9bf77e876389069c9dc76a70acff657f825cb8ee4e4e2",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 6,
+      "confirmations": 23,
+      "coinbase": true,
+      "feeZat": null,
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "t3cFfPt1Bcvgez9ZbMBFWeZsskxTkPzGCow",
+          "valueZat": "12500000"
+        }
+      ],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "125090568"
+        }
+      ]
+    },
+    {
+      "txid": "04f44cc883f0cb77fc88caee45639ac394893f65ee3623f4877bc82e0b825fdd",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 6,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [],
+      "outputs": [],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "-10000"
+        }
+      ]
+    },
+    {
+      "txid": "2938d4dfdd25f13a4e9d306ce8d9c95190ef5c8db8df902e0916b29a5aede4e1",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 6,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [],
+      "outputs": [],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "-10000"
+        }
+      ]
+    },
+    {
+      "txid": "206dd86e7df343e15ccd460a1f8577e6393c359499b4d388b90848ba5155bbd6",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 6,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "15000",
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "t1fy2Zq91ai8t8X9DpbLfVaZijw2zmKw1A4",
+          "valueZat": "25000000"
+        }
+      ],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "-25015000"
+        }
+      ]
+    },
+    {
+      "txid": "8d2d46df261b0b7a5c6a1dbbf8ea70732061d75189d1e88906b338bd8fb3af9a",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 4,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "26500",
+      "inputs": [
+        {
+          "address": "t1LYowYcV4jfVbUYLqc579qwhEEzAEdW4yW",
+          "valueZat": "344165"
+        },
+        {
+          "address": "t1LYowYcV4jfVbUYLqc579qwhEEzAEdW4yW",
+          "valueZat": "2550493"
+        }
+      ],
+      "outputs": [
+        {
+          "address": "t1W7kXLm58aKZzNYFPoCYr8SqnKzTvXpL31",
+          "valueZat": "1000000"
+        },
+        {
+          "address": "t1LYowYcV4jfVbUYLqc579qwhEEzAEdW4yW",
+          "valueZat": "1868158"
+        }
+      ],
+      "poolDeltas": []
+    },
+    {
+      "txid": "266b601e48046704ed709b5a2c51dd76853d3bd2f4f15035f898c1a5909d1fc1",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 4,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [
+        {
+          "address": "t1W2hemhnDYzD8R5bj7g4xTjQvkW4ymxWSV",
+          "valueZat": "511322"
+        },
+        {
+          "address": "t1W2hemhnDYzD8R5bj7g4xTjQvkW4ymxWSV",
+          "valueZat": "10637567300"
+        }
+      ],
+      "outputs": [
+        {
+          "address": "t3NwcYPizti8NBtofRa2NhLtK7Mdw4vKhCW",
+          "valueZat": "10637567300"
+        },
+        {
+          "address": "t1W2hemhnDYzD8R5bj7g4xTjQvkW4ymxWSV",
+          "valueZat": "501322"
+        }
+      ],
+      "poolDeltas": []
+    },
+    {
+      "txid": "031b9aa869879367ff99e6f6c2d71e36dde25fac00661e87d313a6d35be4bb19",
+      "blockHeight": 3520054,
+      "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+      "timestamp": "2026-10-16T17:54:10Z",
+      "version": 4,
+      "confirmations": 23,
+      "coinbase": false,
+      "feeZat": "19068",
+      "inputs": [
+        {
+          "address": "t1g47g7wNA55q5PWYHWb6X5JxzhMqwaknjC",
+          "valueZat": "5003300008"
+        }
+      ],
+      "outputs": [
+        {
+          "address": "t1d6qCw62tVgiS8W7UyWEBtrWBx1RCZfrhk",
+          "valueZat": "3289999"
+        },
+        {
+          "address": "t1g47g7wNA55q5PWYHWb6X5JxzhMqwaknjC",
+          "valueZat": "4999990941"
+        }
+      ],
+      "poolDeltas": []
+    }
+  ]
+}

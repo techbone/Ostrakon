@@ -1,0 +1,29 @@
+{
+  "provenanceVersion": 1,
+  "network": "mainnet",
+  "height": 3520054,
+  "blockHash": "00000000000a364135cf959973e85eaa17206d9e273a884a53f276df2a9dc50d",
+  "transactionCount": 7,
+  "snapshotRetrievedAt": "2026-10-16T18:25:03.884248Z",
+  "rpcEndpoint": "https://zcash-mainnet-zebrad.gateway.tatum.io",
+  "independentBlockUrl": "https://api.mainnet.cipherscan.app/api/block/3520054",
+  "rpcCalls": 9,
+  "responseBytes": 180587,
+  "requestIntervalSeconds": 13,
+  "comparison": [
+    "block hash",
+    "ordered transaction IDs and count",
+    "transaction versions",
+    "transparent input/output counts and totals",
+    "non-coinbase fees",
+    "Sapling/Orchard/Ironwood net balances"
+  ],
+  "consensusVerified": false,
+  "curation": "Only dataset name and source label differ from the exporter output. Transaction records and coverage are unchanged. RPC evidence contains decoded JSON results with exact decimal values, not HTTP headers or credentials.",
+  "sha256": {
+    "tests/fixtures/mainnet-3520054/rpc.json": "af4c214b0ef409944fc65547d61bc895fbc51189db0e357db408a5d934cc4243",
+    "tests/fixtures/mainnet-3520054/cipherscan.json": "98428c636e0749dac8077e24f0b44f727c2adb78ec203a51a667d4d9446f5c39",
+    "tests/fixtures/mainnet-3520054/export.json": "be15fa5bf2924bea496bcbd9ae5fb8ee603470a2194f055a0909c96b333e3824",
+    "src/data/mainnet-3520054.json": "c65a081daad8d8b6d3ee7359c184ebe50ee51a50b45d553dfc1ad0d3f71e9f50"
+  }
+}

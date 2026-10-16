@@ -1,6 +1,6 @@
 import type { Dataset, Pool, Transaction } from "./schema";
 
-export const RULE_VERSION = "ostrakon/0.1.1";
+export const RULE_VERSION = "ostrakon/0.1.2";
 export interface Parameters {
   windowHours: number;
   toleranceZat: string;
@@ -61,6 +61,8 @@ function flowOf(tx: Transaction): Flow | string {
     return "Input, output, fee and pool accounting do not balance.";
   if (delta > 0n && (!tx.inputs.length || tx.outputs.length))
     return "Mixed transparent flow or change; excluded from the simple rule.";
+  if (delta < 0n && !tx.inputs.length && !tx.outputs.length)
+    return "No transparent payout; public net outflow covers only the fee. Internal shielded payments remain hidden.";
   if (delta < 0n && (tx.inputs.length || tx.outputs.length !== 1))
     return "Mixed flow or batched payout; excluded from the simple rule.";
   return {
@@ -161,7 +163,7 @@ export function analyze(
       : "The wider picture is incomplete",
     description: data.coverage.note,
     evidence: [],
-    limitation: `${data.source.kind === "sample" ? "This is synthetic example data." : "Imported records and completeness claims are supplied by the file author."} No live chain, transaction authenticity, current confirmations or reorg checks have been performed.`,
+    limitation: `${data.source.kind === "sample" ? "This is synthetic example data." : "Imported records and completeness claims are supplied by the file author."} The browser has not independently checked the live chain, transaction authenticity, current confirmations or reorgs.`,
     guidance:
       "Interpret findings within the declared block interval. No matches means only that these rules found none in the supplied records.",
   });
