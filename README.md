@@ -53,8 +53,8 @@ React + TypeScript + Vite, a dedicated Web Worker, Zod validation, and static as
 No account system, wallet connection, spending/viewing keys, analytics, external
 fonts, or application database. Vercel build/security configuration is included;
 deployment remains pending. Development commits are published to
-[GitHub](https://github.com/techbone/Ostrakon), where each push runs TypeScript,
-analysis tests and the production build through GitHub Actions.
+[GitHub](https://github.com/techbone/Ostrakon) in small, verified increments.
+Run the checks and production build locally before pushing.
 
 - [Architecture](ARCHITECTURE.md)
 - [Milestones](MILESTONES.md)

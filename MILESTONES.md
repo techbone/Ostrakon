@@ -37,8 +37,7 @@ and a backend/indexer; do not present sample data as a successful live analysis.
 
 The initial architecture and workbench commits are pushed to
 [`techbone/Ostrakon`](https://github.com/techbone/Ostrakon). Each coherent increment
-will be committed and pushed with a short message. GitHub Actions checks types,
-analysis tests and the static production build on pushes and pull requests.
+will be checked locally, committed and pushed with a short message.
 
 The next increment follows [Decision 001](docs/decisions/001-node-export.md): a
 user-operated, read-only node exporter. This keeps network access outside the
