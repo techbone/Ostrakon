@@ -5,7 +5,8 @@ possible amount/time correlations, and understand the limits of the evidence.
 
 ## Run
 
-Requires Node.js 22.12+ and npm.
+Requires Node.js 22.12+ and npm. The optional node exporter and full check suite
+also require Python 3.10+; no Python packages are needed.
 
 ```sh
 npm ci
@@ -15,7 +16,7 @@ npm run dev
 The default port is 5173. If occupied, use `npm run dev -- --port 5178`.
 
 ```sh
-npm run check       # TypeScript + analysis tests
+npm run check       # TypeScript + analysis/integration/exporter tests
 npm run build       # Production output in dist/
 npm run preview     # Production preview, including Vercel security headers
 ```
@@ -29,6 +30,8 @@ npm run preview     # Production preview, including Vercel security headers
 - Separate timing simulation that leaves the original dataset unchanged.
 - Local JSON imports, report downloads, and report re-import with fresh analysis.
 - Three explicitly synthetic examples, responsive layout, and keyboard controls.
+- Optional [read-only node exporter](docs/NODE_EXPORT.md) with bounded ranges,
+  exact amount conversion, previous-output resolution and snapshot hash checks.
 
 See [the dataset format](public/DATA_FORMAT.md). Inputs are limited to 2 MB and
 200 transactions. Refreshing clears imported data; nothing is saved automatically.
@@ -39,7 +42,9 @@ See [the dataset format](public/DATA_FORMAT.md). Inputs are limited to 2 MB and
 did not establish usable browser access. No backend or hidden proxy has been added.
 The application makes no chain-data requests, and production CSP uses
 `connect-src 'none'`. Imported records and source claims are unverified; there is
-no consensus, transaction-inclusion, current-confirmation, or reorg validation.
+no consensus, transaction-inclusion, current-confirmation, or live reorg validation
+in the browser. The optional exporter checks node responses for consistency and
+chain changes during collection; a live-node run remains unverified.
 
 The simple correlation rule excludes unresolved amounts, migrations, multiple
 pools, transparent change, batched exits, low-confirmation snapshots and unsupported

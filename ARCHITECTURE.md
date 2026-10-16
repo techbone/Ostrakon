@@ -1,7 +1,8 @@
 # Ostrakon — Privacy X-ray architecture
 
 Status: Privacy X-ray selected by the user on 16 October 2026. The initial local
-workbench is implemented. Live-provider integration remains blocked; see
+workbench and optional node exporter are implemented. Live-provider integration
+remains blocked; see
 [the provider spike](docs/PROVIDER_SPIKE.md) and [verification](docs/VERIFICATION.md).
 
 ## Product contract
@@ -16,7 +17,8 @@ provider gate passes. Viewing keys and spending keys are excluded.
 
 ## Main journey
 
-1. Choose a local import or labeled example. Public lookup is a future adapter.
+1. Choose a local import or labeled example. Operators can generate an import with
+   the optional CLI node exporter. Public browser lookup is a future adapter.
 2. See the data source, network, covered interval, and completeness.
 3. Explore a transaction timeline and graph. Solid edges are observed flows;
    dashed edges are candidate relationships, never asserted wallet ownership.
@@ -32,6 +34,8 @@ provider gate passes. Viewing keys and spending keys are excluded.
 flowchart LR
   A[Future public chain-data provider] -. blocked .-> B[Future browser data adapter]
   C[Local JSON or sample] --> D[Validation and normalization]
+  K[User-operated Zcash node] --> L[Read-only Python exporter]
+  L --> C
   B -.-> D
   D --> E[Analysis worker]
   E --> F[Findings with evidence]
@@ -46,6 +50,15 @@ analysis. The bounded simulation uses a separate in-memory copy on the main thre
 Static Vercel configuration is included, but no remote deployment has occurred.
 Rust/WASM is unnecessary for the initial public-data rules.
 No application database, login, scheduled fund transfers, or signing service.
+
+The optional `scripts/export_node.py` is a separate operator tool, not an
+application server. It reads a bounded node block range, resolves previous
+transparent outputs, converts node pool-balance signs, and checks block linkage
+and hashes before writing a local file. Authentication stays in the operator's
+environment. Endpoints and credentials are omitted from exported data. Remote
+node operators can observe the queries; a local node avoids that disclosure.
+See [Decision 001](docs/decisions/001-node-export.md) and the
+[exporter guide](docs/NODE_EXPORT.md). No live node run has been verified yet.
 
 A static frontend still depends on an external chain-data provider. Free hosting
 and free data access are targets, not guarantees. If browser access or indexing

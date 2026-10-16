@@ -24,7 +24,7 @@ and a backend/indexer; do not present sample data as a successful live analysis.
 
 - **Implemented and verified:** local dataset schema, pure rule engine, worker,
   synthetic examples, graph, evidence/provenance panels, transaction inspector,
-  timing lab, JSON import/export and responsive UI. Production build and 17 tests
+  timing lab, JSON import/export and responsive UI. Production build and local tests
   pass. Browser checks are recorded in [VERIFICATION](docs/VERIFICATION.md).
 - **Scope adjustment after the spike:** deliver the local snapshot workbench as
   the first development increment. Keep live lookup visibly unavailable. This
@@ -39,9 +39,12 @@ The initial architecture and workbench commits are pushed to
 [`techbone/Ostrakon`](https://github.com/techbone/Ostrakon). Each coherent increment
 will be checked locally, committed and pushed with a short message.
 
-The next increment follows [Decision 001](docs/decisions/001-node-export.md): a
-user-operated, read-only node exporter. This keeps network access outside the
-browser and preserves the local analysis privacy model.
+The next increment implements [Decision 001](docs/decisions/001-node-export.md):
+a user-operated, read-only [node exporter](docs/NODE_EXPORT.md). Offline tests cover
+pool signs, exact amounts, previous outputs, range bounds, reorg detection and the
+Python-to-browser analysis path. An archived upstream mainnet coinbase fixture
+checks historical response compatibility. A live modern node run and independent
+coverage validation are still required; M0 remains open.
 
 Next engineering milestone: obtain a supported provider or a user-operated data
 export adapter, verify a real bounded dataset end-to-end, and document coverage.

@@ -15,6 +15,23 @@ Checked 16 October 2026.
 - npm install audit reports zero vulnerabilities after updating the test runner.
 - Git whitespace checks passed.
 
+## Node exporter increment
+
+- 17 Python tests cover exact decimal/integer amounts, all three pool signs and
+  fees, missing previous outputs, script addresses, parent caching, network/range
+  limits, block linkage/reorgs, output preservation and permissions, HTTP Basic
+  authentication, JSON-RPC errors over HTTP 500, blocked redirects, response IDs,
+  and request/time/response/output bounds.
+- Two additional integration tests execute Python normalization, validate its
+  output with the actual browser schema, and run the analysis engine. The synthetic
+  round trip produces one candidate; the archived mainnet coinbase produces none.
+  The full Vitest suite now has 20 passing tests.
+- The archived [Zebra fixture](../tests/fixtures/ZEBRA_NOTICE.md) is pinned to a
+  source revision with a checksum and retained license. Its block 1 data verifies
+  historical response handling only. Modern-pool transcripts are synthetic.
+- A temporary loopback HTTP server exercises real HTTP transport. No external node
+  is needed for these tests. The exporter has not been run against a live node.
+
 ## Browser checks
 
 - Default example produces one possible correlation and two repeated-address
@@ -35,7 +52,7 @@ Checked 16 October 2026.
 
 ## Boundaries
 
-No live-chain lookup, real-chain fixture, independent consensus validation,
+No live-chain lookup, live modern node export, independent consensus validation,
 external security audit, three-user walkthrough, deployed Vercel URL, or event
 submission has been verified. Privacy is enforced by local design and production
 `connect-src 'none'`; a complete browser network trace was not captured.

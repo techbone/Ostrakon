@@ -30,3 +30,13 @@ Verify network, units, pool-delta sign, transparent previous outputs, v6 support
 snapshot tip/hash, pagination completeness, missing records, CORS, rate-limit
 handling, and reorg behavior. Retain a bounded real public fixture with provenance
 for adapter regression tests. Do not label a local JSON example as a live test.
+
+## Node exporter increment
+
+[Decision 001](decisions/001-node-export.md) selects a separate user-operated
+exporter as the next route. [The implementation](NODE_EXPORT.md) normalizes
+read-only node responses into a bounded import, resolves previous outputs and
+checks snapshot consistency. Tests cover synthetic modern-pool transcripts and
+an archived upstream mainnet coinbase block. This establishes an offline data
+path, not supported browser access or a verified live-node run. The gate above
+remains open.
