@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "name": "The familiar round trip",
+  "network": "mainnet",
+  "source": {
+    "kind": "sample",
+    "label": "Ostrakon learning examples",
+    "retrievedAt": "2026-10-16T09:00:00Z"
+  },
+  "coverage": {
+    "fromHeight": 3500000,
+    "toHeight": 3500250,
+    "complete": false,
+    "note": "A small synthetic dataset showing selected transactions. It does not represent real users or real chain activity."
+  },
+  "transactions": [
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000001",
+      "blockHeight": 3500000,
+      "blockHash": "00000000000000000000000000000000000000000000000000000000000003e8",
+      "timestamp": "2026-10-15T09:00:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [
+        {
+          "address": "example:transparent-address-A",
+          "valueZat": "1250010000"
+        }
+      ],
+      "outputs": [],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "1250000000"
+        }
+      ]
+    },
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000002",
+      "blockHeight": 3500012,
+      "blockHash": "00000000000000000000000000000000000000000000000000000000000003f4",
+      "timestamp": "2026-10-15T09:12:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [
+        {
+          "address": "example:transparent-address-C",
+          "valueZat": "340010000"
+        }
+      ],
+      "outputs": [],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "340000000"
+        }
+      ]
+    },
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000003",
+      "blockHeight": 3500038,
+      "blockHash": "000000000000000000000000000000000000000000000000000000000000040e",
+      "timestamp": "2026-10-15T09:38:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "example:transparent-address-B",
+          "valueZat": "1249990000"
+        }
+      ],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "-1250000000"
+        }
+      ]
+    },
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000004",
+      "blockHeight": 3500085,
+      "blockHash": "000000000000000000000000000000000000000000000000000000000000043d",
+      "timestamp": "2026-10-15T10:25:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [
+        {
+          "address": "example:transparent-address-A",
+          "valueZat": "250010000"
+        }
+      ],
+      "outputs": [
+        {
+          "address": "example:transparent-address-B",
+          "valueZat": "250000000"
+        }
+      ],
+      "poolDeltas": []
+    },
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000005",
+      "blockHeight": 3500130,
+      "blockHash": "000000000000000000000000000000000000000000000000000000000000046a",
+      "timestamp": "2026-10-15T11:10:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "example:transparent-address-D",
+          "valueZat": "179990000"
+        }
+      ],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "-180000000"
+        }
+      ]
+    },
+    {
+      "txid": "0000000000000000000000000000000000000000000000000000000000000006",
+      "blockHeight": 3500210,
+      "blockHash": "00000000000000000000000000000000000000000000000000000000000004ba",
+      "timestamp": "2026-10-15T12:30:00.000Z",
+      "version": 6,
+      "confirmations": 100,
+      "coinbase": false,
+      "feeZat": "10000",
+      "inputs": [
+        {
+          "address": "example:transparent-address-E",
+          "valueZat": "620010000"
+        }
+      ],
+      "outputs": [],
+      "poolDeltas": [
+        {
+          "pool": "ironwood",
+          "valueZat": "620000000"
+        }
+      ]
+    }
+  ]
+}
