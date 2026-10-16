@@ -97,6 +97,58 @@ afterEach(async () => {
 });
 
 describe("analysis belongs to its dataset", () => {
+  it("does not claim eligibility when a record is inspected before analysis", async () => {
+    await importNewDataset();
+    await act(async () => button("Transactions").click());
+    await act(async () =>
+      (
+        container.querySelector(".timeline-record") as HTMLButtonElement
+      ).click(),
+    );
+    expect(
+      container.querySelector('[aria-label="Record rule explanation"]')
+        ?.textContent,
+    ).toContain("No current rule result");
+    expect(
+      container.querySelector('[aria-label="Record rule explanation"]')
+        ?.textContent,
+    ).not.toContain("Eligible for comparison");
+    await act(async () => PendingWorker.instances.at(-1)!.complete());
+    expect(
+      container.querySelector('[aria-label="Record rule explanation"]')
+        ?.textContent,
+    ).toContain("Eligible for comparison");
+  });
+  it("resets notebook filters when another dataset is selected", async () => {
+    await act(async () => button("Transactions").click());
+    const input = container.querySelector(
+      'input[aria-label="Filter transactions"]',
+    ) as HTMLInputElement;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value",
+      )!.set!.call(input, "no-record-has-this-id");
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(container.textContent).toContain("Showing 0 of 6 records");
+    const select = container.querySelector(
+      'select[aria-label="Choose dataset"]',
+    ) as HTMLSelectElement;
+    await act(async () => {
+      select.value = "mainnet-3520054";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await act(async () => PendingWorker.instances.at(-1)!.complete());
+    expect(container.querySelectorAll(".timeline-record")).toHaveLength(7);
+    expect(
+      (
+        container.querySelector(
+          'input[aria-label="Filter transactions"]',
+        ) as HTMLInputElement
+      ).value,
+    ).toBe("");
+  });
   it("labels the recorded chain snapshot separately from synthetic examples", async () => {
     const select = container.querySelector(
       'select[aria-label="Choose dataset"]',

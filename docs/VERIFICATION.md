@@ -101,3 +101,26 @@ submission has been verified. Privacy is enforced by local design and production
   remain available in the mobile layout.
 
 The source evidence and scope limits are in [LIVE_SNAPSHOT](LIVE_SNAPSHOT.md).
+
+## Timeline and exclusions increment
+
+- Rule 0.1.3 retains the previous eligibility criteria and adds stable first-reason
+  codes with reading guidance. Every record appears exactly once as eligible or
+  excluded; exclusions do not suppress address-reuse findings.
+- Nine additional regressions cover contradictory block metadata, legitimate
+  backwards clocks and equivalent timezones, grouping and ID ordering, combined
+  filters across views, pending classification, dataset-switch filter reset, and
+  inspection before analysis. Vitest now has 35 tests; Python retains 23.
+  **58 tests pass**, strict TypeScript passes, and the production build succeeds.
+- In production preview with the CSP, the seven-record mainnet block groups under
+  one header with 1 eligible and 6 excluded records. “No public payout” shows two
+  rows; combining a nonexistent ID gives zero in Table; clearing restores seven.
+- The real shielded record inspector shows no transparent inputs/outputs, an exact
+  0.0001 ZEC fee and Ironwood net outflow, its exclusion and reading guidance.
+- At 390 × 844, the timeline page width is 390 px with no horizontal page overflow.
+  Table remains inside its own scrolling container at the same page width.
+  Keyboard Enter opens a timeline record and Escape closes the inspector. Browser
+  console has no warnings/errors in these checks. No file upload or live provider
+  is needed for them.
+
+Target-user validation is still pending; see [the protocol](USER_WALKTHROUGHS.md).

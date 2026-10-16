@@ -25,7 +25,7 @@ export const exclusionReasons = {
   },
   no_pool_movement: {
     label: "No net shielded movement",
-    reason: "No shielded pool movement.",
+    reason: "No nonzero net shielded pool movement is recorded.",
     nextStep:
       "Inspect the transparent inputs and outputs. This rule needs a nonzero net shielded pool movement; a zero net balance does not establish an absence of shielded activity.",
   },

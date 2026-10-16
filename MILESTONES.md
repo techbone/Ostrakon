@@ -66,11 +66,28 @@ mainnet run recorded below.
   payouts or hidden payment amounts. This block yields one eligible exit and no
   amount/time candidate, while preserving the coverage limitation.
 
-Next engineering milestone: strengthen the evidence journey with a transaction
-timeline and clearer explanations of excluded records. Complete target-user
-walkthroughs before treating M3 as finished. Browser live lookup, broader provider
-coverage, deployment, public licensing, event registration/track and submission
-remain outstanding. Any server proxy requires an explicit architecture/privacy change.
+## Explanation checkpoint · 16 October
+
+- Transactions now has a block-height timeline and table. Same-block records share
+  a header timestamp and use ID order without implying execution or payment order.
+- Whole-dataset rule coverage shows eligible/excluded counts. First-reason chips,
+  eligibility and ID/address search can be combined, inspected and reset.
+- The inspector shows exact net pool balances, the first rule exclusion and reading
+  guidance. Pending analysis never claims eligibility. Excluded records remain
+  available to other rules.
+- Conflicting block metadata is rejected; backwards clocks across blocks remain
+  valid. Stable exclusion codes are included in report analysis (rule 0.1.3).
+- 58 local tests pass, and the production timeline/filter/inspector path has been
+  checked on desktop and mobile. No providers, dependencies or network calls added.
+
+M3's engineering increment is complete; its three target-user walkthroughs are
+still pending. Use [the walkthrough protocol](docs/USER_WALKTHROUGHS.md) rather
+than treating automated or agent browser checks as human validation.
+
+Next engineering milestone: release readiness, including accessibility/privacy
+verification and Vercel preview preparation. Browser live lookup, broader provider
+coverage, public licensing, event registration/track and submission remain open.
+Any server proxy requires an explicit architecture/privacy change.
 
 ## Verification priorities
 

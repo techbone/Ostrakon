@@ -122,6 +122,15 @@ recording does not query a chain provider. `src/data/mainnet-3520054.json` is pu
 chain data with a pinned collection record, not an imported private dataset.
 `src/components/FlowGraph.tsx` displays at most four entries and four exits;
 the analysis and report retain the complete bounded dataset and candidate sets.
+`src/components/TransactionExplorer.tsx` presents every bounded record in a
+block-height timeline or table. Within a block, IDs provide deterministic display
+order, not an execution sequence. Eligibility and exclusion-reason filters combine
+with local ID/address search. Whole-dataset rule counts remain separate from the
+visible filtered count. Switching datasets resets notebook filters.
+`src/core/exclusions.ts` defines stable codes, first-blocking reasons and reading
+guidance. Exclusions apply only to the simple amount/time rule, so excluded
+records may still contribute to address-reuse findings. Pending results never
+produce eligibility claims, including in the transaction inspector.
 `src/App.tsx` manages ephemeral state, inspection, scenarios and file transfer.
 
 Production uses self-hosted assets and `connect-src 'none'`. The development

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
-  ArrowDownLeft,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
@@ -23,7 +22,6 @@ import {
   Upload,
   X,
   Copy,
-  Search,
   AlertCircle,
   RotateCcw,
   ExternalLink,
@@ -52,6 +50,8 @@ import {
   type DatasetKey,
 } from "./core/datasets";
 import { FlowGraph } from "./components/FlowGraph";
+import { TransactionExplorer } from "./components/TransactionExplorer";
+import { exclusionReasons } from "./core/exclusions";
 
 type View = "overview" | "transactions" | "scenario" | "methodology";
 const views = [
@@ -144,7 +144,7 @@ export default function App() {
   const [cancelled, setCancelled] = useState(false);
   const [run, setRun] = useState(0);
   const [delay, setDelay] = useState(12);
-  const [filter, setFilter] = useState("");
+  const [datasetRevision, setDatasetRevision] = useState(0);
   const [mobileNav, setMobileNav] = useState(false);
   const workerRef = useRef<Worker | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -219,15 +219,14 @@ export default function App() {
     compared?.findings
       .filter((f) => f.kind === "candidate")
       .reduce((n, f) => n + f.evidence.length - 1, 0) ?? 0;
-  const filtered = data.transactions.filter(
-    (tx) =>
-      tx.txid.includes(filter.toLowerCase()) ||
-      [...tx.inputs, ...tx.outputs].some((io) =>
-        io.address?.toLowerCase().includes(filter.toLowerCase()),
-      ),
-  );
   const openTransaction = (id: string) =>
     setTransaction(data.transactions.find((tx) => tx.txid === id) ?? null);
+  const inspectedExclusion = transaction
+    ? analysis?.excluded.find((item) => item.txid === transaction.txid)
+    : undefined;
+  const inspectedFlow = transaction
+    ? analysis?.flows.find((flow) => flow.txid === transaction.txid)
+    : undefined;
   const changeView = (next: View) => {
     setView(next);
     setMobileNav(false);
@@ -242,7 +241,7 @@ export default function App() {
       setTransaction(null);
       setSelectedId("");
       setBuiltIn(false);
-      setFilter("");
+      setDatasetRevision((revision) => revision + 1);
       setView("overview");
       setModal(null);
       setError("");
@@ -260,7 +259,7 @@ export default function App() {
     setData(builtInDataset(key));
     setTransaction(null);
     setSelectedId("");
-    setFilter("");
+    setDatasetRevision((revision) => revision + 1);
     setError("");
   }
   async function copy(text: string) {
@@ -711,112 +710,12 @@ export default function App() {
             </>
           )}
           {view === "transactions" && (
-            <section className="panel transaction-panel">
-              <div className="panel-header">
-                <div>
-                  <h2>
-                    The transaction notebook{" "}
-                    <span className="count">{filtered.length}</span>
-                  </h2>
-                  <p>
-                    Block times are approximate. Amounts are exact zatoshi
-                    conversions.
-                  </p>
-                </div>
-                <label className="search-field">
-                  <Search size={16} />
-                  <input
-                    placeholder="Filter ID or address"
-                    aria-label="Filter transactions"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div className="table-scroll">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Transaction</th>
-                      <th>Block</th>
-                      <th>Time · UTC</th>
-                      <th>Pool movement</th>
-                      <th>Rule eligibility</th>
-                      <th>
-                        <span className="sr-only">Inspect</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((tx) => (
-                      <tr key={tx.txid}>
-                        <td>
-                          <button
-                            className="tx-link"
-                            onClick={() => setTransaction(tx)}
-                          >
-                            <FileJson size={15} />
-                            <code>{short(tx.txid)}</code>
-                          </button>
-                        </td>
-                        <td>{tx.blockHeight.toLocaleString()}</td>
-                        <td>{fmtTime(tx.timestamp)}</td>
-                        <td>
-                          {tx.poolDeltas.length === 1 ? (
-                            <span className="movement">
-                              {BigInt(tx.poolDeltas[0].valueZat) > 0n ? (
-                                <ArrowDownLeft size={14} />
-                              ) : (
-                                <ArrowUpRight size={14} />
-                              )}
-                              {zec(tx.poolDeltas[0].valueZat)} ZEC
-                              <span>{tx.poolDeltas[0].pool}</span>
-                            </span>
-                          ) : tx.poolDeltas.length ? (
-                            "Multiple pools"
-                          ) : (
-                            "Transparent"
-                          )}
-                        </td>
-                        <td>
-                          <span
-                            className={`tag ${analysis?.flows.some((f) => f.txid === tx.txid) ? "green" : "neutral"}`}
-                          >
-                            {analysis
-                              ? analysis.flows.some((f) => f.txid === tx.txid)
-                                ? "ELIGIBLE"
-                                : "EXCLUDED"
-                              : "PENDING"}
-                          </span>
-                        </td>
-                        <td>
-                          <button
-                            className="icon-button"
-                            aria-label={`Inspect transaction ${tx.txid.slice(-6)}`}
-                            onClick={() => setTransaction(tx)}
-                          >
-                            <ArrowUpRight size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {filtered.length === 0 && (
-                  <div className="empty-state">
-                    <Search size={28} />
-                    <h3>No matching records</h3>
-                    <p>Try a shorter transaction ID or address.</p>
-                    <button
-                      className="button secondary"
-                      onClick={() => setFilter("")}
-                    >
-                      Clear filter
-                    </button>
-                  </div>
-                )}
-              </div>
-            </section>
+            <TransactionExplorer
+              key={datasetRevision}
+              data={data}
+              analysis={analysis}
+              onInspect={setTransaction}
+            />
           )}
           {view === "scenario" && analysis && compared && (
             <section className="scenario-layout">
@@ -952,7 +851,7 @@ export default function App() {
                   [
                     "02",
                     "Small rules, explicit exclusions",
-                    "The round-trip rule compares balanced, single-pool entries without transparent change to exits with one transparent output. It excludes unresolved inputs, migrations, batched payouts, unsupported versions and low-confirmation records. Fees are included in net pool movements.",
+                    "The round-trip rule compares balanced, single-pool entries without transparent change to exits with one transparent output. It excludes unresolved inputs, migrations, batched payouts, unsupported versions and low-confirmation records. Fee contributions are accounted for alongside public pool balances.",
                   ],
                   [
                     "03",
@@ -1296,7 +1195,7 @@ export default function App() {
               <strong>{transaction.blockHeight.toLocaleString()}</strong>
             </div>
             <div>
-              <span>Timestamp</span>
+              <span>Block time · approximate</span>
               <strong>
                 {new Date(transaction.timestamp)
                   .toISOString()
@@ -1341,14 +1240,57 @@ export default function App() {
               </div>
             ))}
           </div>
-          <div className="caution">
-            <AlertCircle size={16} />
+          <div className="inspector-balances">
+            <span className="small-label">NET SHIELDED POOL BALANCES</span>
+            {transaction.poolDeltas.length ? (
+              <dl>
+                {transaction.poolDeltas.map((delta) => (
+                  <div key={delta.pool}>
+                    <dt>{delta.pool}</dt>
+                    <dd>
+                      {zec(
+                        BigInt(delta.valueZat) < 0n
+                          ? -BigInt(delta.valueZat)
+                          : BigInt(delta.valueZat),
+                      )}{" "}
+                      ZEC {BigInt(delta.valueZat) > 0n ? "entering" : "leaving"}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <p>No nonzero net pool balance recorded.</p>
+            )}
             <p>
-              {analysis?.excluded.find((x) => x.txid === transaction.txid)
-                ?.reason ??
-                "Eligible for the simple pool amount/time rule. Eligibility is not a statement about ownership."}{" "}
-              All fields come from the loaded snapshot.
+              An outflow may include a fee contribution. Net balances do not
+              reveal individual hidden note values or internal payments.
             </p>
+          </div>
+          <div className="inspector-rule" aria-label="Record rule explanation">
+            <span className="small-label">AMOUNT & TIME RULE</span>
+            <h3>
+              {inspectedExclusion
+                ? exclusionReasons[inspectedExclusion.code].label
+                : inspectedFlow
+                  ? "Eligible for comparison"
+                  : "No current rule result"}
+            </h3>
+            <p>
+              {inspectedExclusion?.reason ??
+                (inspectedFlow
+                  ? "This record fits the simple amount/time rule. Eligibility does not establish shared ownership or a matching payment."
+                  : "Wait for the current analysis to finish or run it again. Supplied fields can be inspected before classification.")}
+            </p>
+            {inspectedExclusion && (
+              <p>
+                <strong>How to read it</strong>{" "}
+                {exclusionReasons[inspectedExclusion.code].nextStep}
+              </p>
+            )}
+            <small>
+              All fields come from the loaded snapshot. Exclusion is not a
+              privacy verdict.
+            </small>
           </div>
           <button
             className="button secondary"

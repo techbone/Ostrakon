@@ -27,7 +27,9 @@ npm run preview     # Production preview, including Vercel security headers
 - Browser-worker analysis with exact integer zatoshi accounting.
 - Repeated transparent address appearances and bounded amount/time candidates.
 - All competing matches retained; no anonymity score or ownership assertion.
-- Interactive pool-flow graph, transaction notebook, evidence and provenance views.
+- Interactive pool-flow graph, block timeline/table, evidence and provenance views.
+- Eligibility, exclusion-reason and ID/address filters with exact record counts.
+- Inspectable net pool balances and explanations of why each record is excluded.
 - Separate timing simulation that leaves the original dataset unchanged.
 - Local JSON imports, report downloads, and report re-import with fresh analysis.
 - Three explicitly synthetic examples, responsive layout, and keyboard controls.
@@ -70,6 +72,7 @@ Run the checks and production build locally before pushing.
 - [Architecture](ARCHITECTURE.md)
 - [Milestones](MILESTONES.md)
 - [Verification record](docs/VERIFICATION.md)
+- [Target-user walkthrough protocol](docs/USER_WALKTHROUGHS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Node export decision](docs/decisions/001-node-export.md)
 
