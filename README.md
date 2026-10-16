@@ -52,12 +52,15 @@ cannot establish privacy. See [validation](VALIDATION.md) and the
 React + TypeScript + Vite, a dedicated Web Worker, Zod validation, and static assets.
 No account system, wallet connection, spending/viewing keys, analytics, external
 fonts, or application database. Vercel build/security configuration is included;
-this repository has not been deployed or pushed to a remote.
+deployment remains pending. Development commits are published to
+[GitHub](https://github.com/techbone/Ostrakon), where each push runs TypeScript,
+analysis tests and the production build through GitHub Actions.
 
 - [Architecture](ARCHITECTURE.md)
 - [Milestones](MILESTONES.md)
 - [Verification record](docs/VERIFICATION.md)
 - [Contributing](CONTRIBUTING.md)
+- [Node export decision](docs/decisions/001-node-export.md)
 
 ZECATHON's registration form was accessible on 16 October 2026. Published
 submissions close 28 October at 23:59 UTC (29 October at 00:59 Lagos). No event

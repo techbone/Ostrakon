@@ -31,7 +31,18 @@ and a backend/indexer; do not present sample data as a successful live analysis.
   advances the independent portions of M1–M3; it does not pass M0's live-data gate.
 - **Still open:** real provider/integration, independent data validation, target
   user walkthroughs, competitive differentiation, event registration/track,
-  remote repository and Vercel deployment, public licensing and submission.
+  Vercel deployment, public licensing and submission.
+
+## GitHub delivery checkpoint
+
+The initial architecture and workbench commits are pushed to
+[`techbone/Ostrakon`](https://github.com/techbone/Ostrakon). Each coherent increment
+will be committed and pushed with a short message. GitHub Actions checks types,
+analysis tests and the static production build on pushes and pull requests.
+
+The next increment follows [Decision 001](docs/decisions/001-node-export.md): a
+user-operated, read-only node exporter. This keeps network access outside the
+browser and preserves the local analysis privacy model.
 
 Next engineering milestone: obtain a supported provider or a user-operated data
 export adapter, verify a real bounded dataset end-to-end, and document coverage.
