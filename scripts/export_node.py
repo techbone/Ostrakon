@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from http.client import HTTPException
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -141,7 +142,7 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 class RpcClient:
-    def __init__(self, endpoint, username=None, password=None):
+    def __init__(self, endpoint, username=None, password=None, request_interval=0):
         try:
             url = urlsplit(endpoint)
             local = url.hostname in ("localhost", "127.0.0.1", "::1")
@@ -163,6 +164,12 @@ class RpcClient:
             raise ExportError(
                 "Set both OSTRAKON_RPC_USER and OSTRAKON_RPC_PASSWORD, or neither."
             )
+        if (
+            type(request_interval) not in (int, float)
+            or not math.isfinite(request_interval)
+            or not 0 <= request_interval <= 60
+        ):
+            raise ExportError("Request interval must be between 0 and 60 seconds.")
         self.endpoint = endpoint
         self.headers = {"Content-Type": "application/json"}
         if username:
@@ -173,6 +180,8 @@ class RpcClient:
         self.calls = 0
         self.total_bytes = 0
         self.deadline = time.monotonic() + 180
+        self.request_interval = request_interval
+        self.last_request_started = None
 
     def __call__(self, method, params):
         if method not in METHODS:
@@ -183,6 +192,20 @@ class RpcClient:
             raise ExportError(
                 "Export request or time limit exceeded; choose a smaller range."
             )
+        if self.last_request_started is not None:
+            wait = max(
+                0, self.last_request_started + self.request_interval - time.monotonic()
+            )
+            if wait >= remaining:
+                raise ExportError(
+                    "Request pacing exceeds the export time budget; choose a smaller range."
+                )
+            if wait:
+                time.sleep(wait)
+        self.last_request_started = time.monotonic()
+        remaining = self.deadline - self.last_request_started
+        if remaining <= 0:
+            raise ExportError("Export time budget expired before the next request.")
         payload = json.dumps(
             {"jsonrpc": "1.0", "id": self.calls, "method": method, "params": params}
         ).encode()
@@ -193,6 +216,15 @@ class RpcClient:
             with self.opener.open(request, timeout=min(20, remaining)) as response:
                 body = response.read(MAX_RESPONSE + 1)
         except HTTPError as exc:
+            if exc.code == 429:
+                retry = exc.headers.get("Retry-After", "")
+                hint = (
+                    f" Wait at least {int(retry)} seconds before retrying."
+                    if re.fullmatch(r"\d{1,6}", retry)
+                    else " Retry later."
+                )
+                exc.close()
+                raise ExportError(f"Node rate limit reached (HTTP 429).{hint}") from exc
             # zcashd uses HTTP 500 for JSON-RPC errors, including absent txindex data.
             if exc.code != 500:
                 raise ExportError(
@@ -460,6 +492,12 @@ def main(argv=None):
         help="New output file; existing files are never overwritten",
     )
     parser.add_argument(
+        "--request-interval",
+        type=float,
+        default=0,
+        help="Minimum seconds between requests (0–60); use 13 for a five-per-minute provider",
+    )
+    parser.add_argument(
         "--allow-unresolved",
         action="store_true",
         help="Retain missing previous outputs as unknown; mark coverage partial",
@@ -470,6 +508,7 @@ def main(argv=None):
             os.environ.get("OSTRAKON_RPC_URL", "http://127.0.0.1:8232"),
             os.environ.get("OSTRAKON_RPC_USER"),
             os.environ.get("OSTRAKON_RPC_PASSWORD"),
+            request_interval=args.request_interval,
         )
         dataset = export_snapshot(
             rpc, args.from_height, args.to_height, args.network, args.allow_unresolved

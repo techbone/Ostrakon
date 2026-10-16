@@ -5,12 +5,14 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from io import BytesIO
+from email.message import Message
 import json
 from pathlib import Path
 import tempfile
 import threading
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 from scripts.export_node import (
     ExportError,
@@ -264,6 +266,47 @@ class SnapshotTests(unittest.TestCase):
 
 
 class TransportTests(unittest.TestCase):
+    def test_request_pacing_waits_without_real_sleep(self):
+        rpc = RpcClient("http://127.0.0.1:8232", request_interval=13)
+        rpc.deadline = 280
+        rpc.last_request_started = 100
+        with patch("scripts.export_node.time.monotonic", side_effect=[100, 100, 113]):
+            with patch("scripts.export_node.time.sleep") as sleep:
+                with patch.object(
+                    rpc.opener, "open", return_value=BytesIO(b'{"id":1,"result":"ok"}')
+                ):
+                    self.assertEqual(rpc("getblockhash", [1]), "ok")
+                sleep.assert_called_once_with(13)
+
+    def test_pacing_respects_interval_and_operation_limits(self):
+        for interval in (-1, 61, float("nan"), float("inf"), True, "13"):
+            with self.assertRaises(ExportError):
+                RpcClient("http://127.0.0.1:8232", request_interval=interval)
+        rpc = RpcClient("http://127.0.0.1:8232", request_interval=13)
+        rpc.deadline = 110
+        rpc.last_request_started = 100
+        with patch("scripts.export_node.time.monotonic", return_value=100):
+            with patch("scripts.export_node.time.sleep") as sleep:
+                with self.assertRaisesRegex(ExportError, "time budget"):
+                    rpc("getblockhash", [1])
+                sleep.assert_not_called()
+
+    def test_rate_limit_hints_do_not_echo_arbitrary_headers(self):
+        for header, expected in (
+            ("30", "Wait at least 30 seconds"),
+            ("sensitive", "Retry later"),
+        ):
+            rpc = RpcClient("http://127.0.0.1:8232")
+            headers = Message()
+            headers["Retry-After"] = header
+            error = HTTPError(
+                rpc.endpoint, 429, "sensitive", headers, BytesIO(b"sensitive")
+            )
+            with patch.object(rpc.opener, "open", side_effect=error):
+                with self.assertRaisesRegex(ExportError, expected) as caught:
+                    rpc("getblockhash", [1])
+                self.assertNotIn("sensitive", str(caught.exception))
+
     def test_endpoint_and_method_guards(self):
         for url in (
             "http://example.com",

@@ -27,6 +27,11 @@ For nodes requiring HTTP Basic authentication, supply both `OSTRAKON_RPC_USER`
 and `OSTRAKON_RPC_PASSWORD` through your environment or a secret manager. Do not
 put credentials in a URL, command argument, committed file, or dataset.
 
+Use `--request-interval 13` for a provider limited to five calls per minute.
+Pacing counts toward the 180-second export budget, so start with one block.
+HTTP 429 stops the export and displays a numeric Retry-After hint when supplied;
+wait before retrying. No rate-limit retries or provider switching happen silently.
+
 Open Ostrakon, select **Import dataset**, and choose the generated JSON. The
 browser does not contact your node; the file remains in memory in that tab.
 The exporter records the block interval and original tip height/hash in the
