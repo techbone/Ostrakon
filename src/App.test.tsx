@@ -97,6 +97,33 @@ afterEach(async () => {
 });
 
 describe("analysis belongs to its dataset", () => {
+  it("labels the recorded chain snapshot separately from synthetic examples", async () => {
+    const select = container.querySelector(
+      'select[aria-label="Choose dataset"]',
+    ) as HTMLSelectElement;
+    await act(async () => {
+      select.value = "mainnet-3520054";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await act(async () => PendingWorker.instances.at(-1)!.complete());
+    expect(
+      container.querySelector(".dataset-info .small-label")?.textContent,
+    ).toBe("RECORDED MAINNET · 16 OCT 2026");
+    expect(container.textContent).toContain("Recorded public snapshot");
+    expect(container.textContent).not.toContain(
+      "A possible round-trip pattern",
+    );
+    await act(async () =>
+      button("Inspect dataset provenance and coverage").click(),
+    );
+    expect(container.querySelector("dialog")?.textContent).toContain(
+      "Bundled public-chain recording · not a live lookup",
+    );
+    expect(container.querySelector("dialog")?.textContent).toContain(
+      "2026-10-16T18:25:03.884Z",
+    );
+  });
+
   it("imports disjoint transaction IDs without rendering stale evidence", async () => {
     expect(container.textContent).toContain("A possible round-trip pattern");
     await importNewDataset();

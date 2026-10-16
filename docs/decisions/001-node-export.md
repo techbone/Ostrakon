@@ -39,3 +39,7 @@ upstream fixture is not a successful live-node integration test.
 The live-data gate remains open until a real node export is loaded end-to-end and
 its coverage is independently checked. This adapter is an incremental route toward
 that gate; it does not add an address scanner or viewing-key import.
+
+Outcome, 16 October: the [bounded mainnet collection](../LIVE_SNAPSHOT.md) passed
+the snapshot path through the actual exporter and production browser. Live
+browser address lookup remains a separate, unimplemented capability.

@@ -45,7 +45,12 @@ import {
   type Dataset,
   type Transaction,
 } from "./core/schema";
-import { sample, sampleLabels, type SampleKey } from "./core/samples";
+import { sample, sampleLabels } from "./core/samples";
+import {
+  builtInDataset,
+  recordedLabel,
+  type DatasetKey,
+} from "./core/datasets";
 import { FlowGraph } from "./components/FlowGraph";
 
 type View = "overview" | "transactions" | "scenario" | "methodology";
@@ -119,7 +124,7 @@ function Modal({
 export default function App() {
   const [view, setView] = useState<View>("overview");
   const [data, setData] = useState<Dataset>(() => sample("roundtrip"));
-  const [sampleKey, setSampleKey] = useState<SampleKey>("roundtrip");
+  const [datasetKey, setDatasetKey] = useState<DatasetKey>("roundtrip");
   const [builtIn, setBuiltIn] = useState(true);
   const [parameters, setParameters] = useState<Parameters>(defaults);
   const [completed, setCompleted] = useState<{
@@ -249,10 +254,10 @@ export default function App() {
     }
     if (fileRef.current) fileRef.current.value = "";
   }
-  function chooseSample(key: SampleKey) {
-    setSampleKey(key);
+  function chooseDataset(key: DatasetKey) {
+    setDatasetKey(key);
     setBuiltIn(true);
-    setData(sample(key));
+    setData(builtInDataset(key));
     setTransaction(null);
     setSelectedId("");
     setFilter("");
@@ -411,22 +416,31 @@ export default function App() {
                   <span className="small-label">
                     {isSample
                       ? "LEARNING EXAMPLE · SYNTHETIC DATA"
-                      : "LOCAL IMPORT · UNVERIFIED SNAPSHOT"}
+                      : builtIn
+                        ? "RECORDED MAINNET · 16 OCT 2026"
+                        : "LOCAL IMPORT · UNVERIFIED SNAPSHOT"}
                   </span>
-                  {isSample && builtIn ? (
+                  {builtIn ? (
                     <div className="select-wrap">
                       <select
-                        aria-label="Choose learning example"
-                        value={sampleKey}
+                        aria-label="Choose dataset"
+                        value={datasetKey}
                         onChange={(e) =>
-                          chooseSample(e.target.value as SampleKey)
+                          chooseDataset(e.target.value as DatasetKey)
                         }
                       >
-                        {Object.entries(sampleLabels).map(([key, label]) => (
-                          <option key={key} value={key}>
-                            {label}
+                        <optgroup label="Learning examples · synthetic">
+                          {Object.entries(sampleLabels).map(([key, label]) => (
+                            <option key={key} value={key}>
+                              {label}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Recorded public chain · not live">
+                          <option value="mainnet-3520054">
+                            {recordedLabel}
                           </option>
-                        ))}
+                        </optgroup>
                       </select>
                       <ChevronDown size={14} />
                     </div>
@@ -1004,7 +1018,7 @@ export default function App() {
             <span>
               {view === "methodology"
                 ? "No keys. No accounts."
-                : `${isSample ? "Synthetic example" : "Unverified local import"} · ${data.network} format`}{" "}
+                : `${isSample ? "Synthetic example" : builtIn ? "Recorded public snapshot" : "Unverified local import"} · ${data.network}${isSample ? " format" : ""}`}{" "}
               <i /> All analysis stays local
             </span>
           </footer>
@@ -1020,7 +1034,11 @@ export default function App() {
             <dd>{data.source.label}</dd>
             <dt>Origin</dt>
             <dd>
-              {builtIn ? "Built-in synthetic example" : "File imported locally"}
+              {builtIn
+                ? isSample
+                  ? "Built-in synthetic example"
+                  : "Bundled public-chain recording · not a live lookup"
+                : "File imported locally"}
             </dd>
             <dt>Network format</dt>
             <dd>{data.network}</dd>
@@ -1039,9 +1057,22 @@ export default function App() {
             </dd>
             <dt>Verification</dt>
             <dd>
-              None. No chain inclusion, live confirmations, or reorg checks.
+              {builtIn && !isSample
+                ? "Collection hashes rechecked by exporter; a second source agreed on public fields. No consensus, chain inclusion, live confirmations, or browser reorg verification."
+                : "None. No chain inclusion, live confirmations, or reorg checks."}
             </dd>
           </dl>
+          {builtIn && !isSample && (
+            <a
+              className="text-link"
+              href="https://github.com/techbone/Ostrakon/blob/main/docs/LIVE_SNAPSHOT.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read the collection and cross-check record{" "}
+              <ExternalLink size={14} />
+            </a>
+          )}
           <div className="caution">
             <AlertCircle size={16} />
             <p>
@@ -1131,7 +1162,7 @@ export default function App() {
             <button
               className="text-link"
               onClick={() => {
-                chooseSample("roundtrip");
+                chooseDataset("roundtrip");
                 setModal(null);
               }}
             >

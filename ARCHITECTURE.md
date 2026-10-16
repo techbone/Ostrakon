@@ -1,9 +1,10 @@
 # Ostrakon — Privacy X-ray architecture
 
 Status: Privacy X-ray selected by the user on 16 October 2026. The initial local
-workbench and optional node exporter are implemented. Live-provider integration
-remains blocked; see
-[the provider spike](docs/PROVIDER_SPIKE.md) and [verification](docs/VERIFICATION.md).
+workbench and optional node exporter are implemented. A live public-node export
+and its recorded browser path are verified for one bounded mainnet block; see
+[the collection record](docs/LIVE_SNAPSHOT.md). Direct browser provider lookup is
+deferred. See also [verification](docs/VERIFICATION.md).
 
 ## Product contract
 
@@ -11,13 +12,13 @@ Explain visible transaction facts and possible correlations, with evidence and
 limitations. Never claim to reveal hidden shielded parties, prove ownership from
 timing, or certify that a wallet is anonymous.
 
-The initial release accepts documented local JSON and explicitly synthetic
-examples. Public transparent address/transaction lookup is deferred until the
-provider gate passes. Viewing keys and spending keys are excluded.
+The initial release accepts documented local JSON, explicitly synthetic examples,
+and a dated public mainnet recording. Public transparent address/transaction lookup
+requires a separate browser-provider gate. Viewing keys and spending keys are excluded.
 
 ## Main journey
 
-1. Choose a local import or labeled example. Operators can generate an import with
+1. Choose a local import, synthetic example or dated mainnet recording. Operators can generate an import with
    the optional CLI node exporter. Public browser lookup is a future adapter.
 2. See the data source, network, covered interval, and completeness.
 3. Explore a transaction timeline and graph. Solid edges are observed flows;
@@ -32,8 +33,8 @@ provider gate passes. Viewing keys and spending keys are excluded.
 
 ```mermaid
 flowchart LR
-  A[Future public chain-data provider] -. blocked .-> B[Future browser data adapter]
-  C[Local JSON or sample] --> D[Validation and normalization]
+  A[Future public chain-data provider] -. deferred .-> B[Future browser data adapter]
+  C[Local JSON, sample or recorded mainnet] --> D[Validation and normalization]
   K[User-operated Zcash node] --> L[Read-only Python exporter]
   L --> C
   B -.-> D
@@ -58,7 +59,9 @@ and hashes before writing a local file. Authentication stays in the operator's
 environment. Endpoints and credentials are omitted from exported data. Remote
 node operators can observe the queries; a local node avoids that disclosure.
 See [Decision 001](docs/decisions/001-node-export.md) and the
-[exporter guide](docs/NODE_EXPORT.md). No live node run has been verified yet.
+[exporter guide](docs/NODE_EXPORT.md). A nine-request export from a public Zebra
+gateway is recorded with cross-source checks and replay tests. That demonstrates
+one bounded operation, not universal node compatibility or production reliability.
 
 A static frontend still depends on an external chain-data provider. Free hosting
 and free data access are targets, not guarantees. If browser access or indexing
@@ -111,6 +114,10 @@ financial activity. No automatic public sharing.
 `src/core/schema.ts` validates datasets/reports and enforces bounded input.
 `src/core/analyze.ts` is a deterministic, side-effect-free rule engine.
 `src/core/analysis.worker.ts` isolates normal analysis from rendering.
+`src/core/datasets.ts` supplies independent copies of the bundled examples and
+recorded mainnet dataset. Both load as static application assets; choosing a
+recording does not query a chain provider. `src/data/mainnet-3520054.json` is public
+chain data with a pinned collection record, not an imported private dataset.
 `src/components/FlowGraph.tsx` displays at most four entries and four exits;
 the analysis and report retain the complete bounded dataset and candidate sets.
 `src/App.tsx` manages ephemeral state, inspection, scenarios and file transfer.

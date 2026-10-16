@@ -30,7 +30,8 @@ Checked 16 October 2026.
   source revision with a checksum and retained license. Its block 1 data verifies
   historical response handling only. Modern-pool transcripts are synthetic.
 - A temporary loopback HTTP server exercises real HTTP transport. No external node
-  is needed for these tests. The exporter has not been run against a live node.
+  is needed for these tests. At this checkpoint the exporter had not been run
+  against a live node; the verified follow-up is recorded below.
 
 ## Dataset-switch regression
 
@@ -67,7 +68,36 @@ layout was inspected in the production preview with the restrictive CSP.
 
 ## Boundaries
 
-No live-chain lookup, live modern node export, independent consensus validation,
+No browser live-chain lookup, independent consensus validation,
 external security audit, three-user walkthrough, deployed Vercel URL, or event
 submission has been verified. Privacy is enforced by local design and production
 `connect-src 'none'`; a complete browser network trace was not captured.
+
+## Live mainnet increment
+
+- A real nine-request export of mainnet block 3,520,054 completed on 16 October
+  at 18:25:03 UTC (19:25:03 Lagos), with all seven records and no unresolved inputs.
+  Range and original tip hashes were rechecked during collection.
+- CipherScan's recorded response agrees on the canonical hash, ordered IDs/count,
+  transaction versions, individual transparent addresses/values, totals, fees and
+  supported net pool balances. This is not independent consensus verification.
+- Three additional Python tests replay the real RPC results, compare public fields
+  against the second source, and verify the evidence checksums. Three transport
+  regressions cover request pacing and safe HTTP 429 hints. Python total: 23 tests.
+- The real snapshot runs through the browser schema/analyzer. It has one eligible
+  0.25015 ZEC Ironwood exit and zero candidate matches. Two shielded transactions
+  whose public net outflow pays fees are explicitly excluded; internal payments
+  remain hidden. Rule version 0.1.2 improves that explanation.
+- A DOM test verifies recorded-data labels, provenance and source switching.
+  Vitest total: 26 tests. Full local suite: **49 passing tests**, plus strict
+  TypeScript and the static production build.
+- In production preview under the CSP, the recorded dataset selector loads seven
+  records and one eligible flow. The inspector displays the real 0.25 ZEC payout
+  and 0.00015 ZEC fee. Provenance shows the recorded retrieval time, public source,
+  block interval, collection checks and explicit lack of live verification.
+  Browser console contains no warnings or errors in this check.
+- At 390 × 844, the recorded-data layout has a 390 px page width with no horizontal
+  overflow. The recorded-data selector, single-exit graph and coverage finding
+  remain available in the mobile layout.
+
+The source evidence and scope limits are in [LIVE_SNAPSHOT](LIVE_SNAPSHOT.md).

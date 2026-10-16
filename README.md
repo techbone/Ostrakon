@@ -31,6 +31,9 @@ npm run preview     # Production preview, including Vercel security headers
 - Separate timing simulation that leaves the original dataset unchanged.
 - Local JSON imports, report downloads, and report re-import with fresh analysis.
 - Three explicitly synthetic examples, responsive layout, and keyboard controls.
+- A separately labeled [recorded mainnet snapshot](docs/LIVE_SNAPSHOT.md), exported
+  live and cross-checked against a second source. Choose **Mainnet · 7 records ·
+  16 Oct 2026** in the dataset selector; no chain requests occur in the browser.
 - Optional [read-only node exporter](docs/NODE_EXPORT.md) with bounded ranges,
   exact amount conversion, previous-output resolution and snapshot hash checks.
 
@@ -39,13 +42,15 @@ See [the dataset format](public/DATA_FORMAT.md). Inputs are limited to 2 MB and
 
 ## Current limits
 
-**This is a snapshot analyzer, not a live address scanner.** Public-provider tests
-did not establish usable browser access. No backend or hidden proxy has been added.
+**This is a snapshot analyzer, not a live address scanner.** The bounded public-node
+export path is verified; direct browser lookup remains unimplemented. No backend
+or hidden proxy has been added.
 The application makes no chain-data requests, and production CSP uses
 `connect-src 'none'`. Imported records and source claims are unverified; there is
 no consensus, transaction-inclusion, current-confirmation, or live reorg validation
 in the browser. The optional exporter checks node responses for consistency and
-chain changes during collection; a live-node run remains unverified.
+chain changes during collection. Its first live mainnet run is recorded with
+cross-source comparisons; that does not establish consensus validity or ongoing availability.
 
 The simple correlation rule excludes unresolved amounts, migrations, multiple
 pools, transparent change, batched exits, low-confirmation snapshots and unsupported

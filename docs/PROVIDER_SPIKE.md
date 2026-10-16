@@ -1,7 +1,7 @@
 # Public data feasibility · 16 October 2026
 
-Outcome: **no live browser data adapter enabled**. The local workbench is a
-deliberate narrower increment. These observations apply to this environment and
+Outcome: **no live browser data adapter enabled; a separate live node export
+now verified**. The local workbench is a deliberate narrower product. These observations apply to this environment and
 time; they do not establish permanent provider unavailability.
 
 | Probe                                                                        | Observed result                    | Implication                                    |
@@ -38,5 +38,24 @@ exporter as the next route. [The implementation](NODE_EXPORT.md) normalizes
 read-only node responses into a bounded import, resolves previous outputs and
 checks snapshot consistency. Tests cover synthetic modern-pool transcripts and
 an archived upstream mainnet coinbase block. This establishes an offline data
-path, not supported browser access or a verified live-node run. The gate above
-remains open.
+path at that stage, not supported browser access or a verified live-node run.
+The subsequent live collection is recorded below.
+
+## Live-node gate · passed for one bounded range
+
+Tatum's [documented keyless Zebra gateway](https://freerpc.com/zcash) returned chain
+information and complete verbosity 2 block responses. A paced nine-request export
+of block 3,520,054 resolved every previous output and rechecked range/tip hashes.
+The deployed endpoint rejected verbosity 3 with RPC code -8. An earlier inspected
+block exceeded the workbench's 16-input limit and was not silently truncated.
+
+CipherScan's single-block endpoint also succeeded during this follow-up; the
+earlier list-route failures do not establish permanent service unavailability.
+Its hash, transaction list, individual transparent addresses/values, totals, fees
+and pool balances agree with the export. The recorded dataset loads in the
+production browser with no chain requests. See [the evidence](LIVE_SNAPSHOT.md).
+
+This passes the snapshot data path, not direct browser CORS, address lookup,
+large ranges, arbitrary node versions, uptime or consensus validation. Those
+capabilities require their own tests. No origin restriction was bypassed and no
+relay, signup, paid service, or wallet query was introduced.

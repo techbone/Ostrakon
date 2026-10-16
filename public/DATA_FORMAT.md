@@ -2,7 +2,9 @@
 
 Ostrakon accepts UTF-8 JSON, at most 2 MB, with 1–200 transactions. Unknown fields
 are rejected. Never provide seed phrases, viewing keys, wallet databases or secrets.
-This release does not fetch or independently authenticate blockchain records.
+The browser does not fetch or independently authenticate blockchain records.
+The optional operator exporter can collect a bounded node snapshot. A bundled
+recorded mainnet dataset remains a dated recording, even though it was collected live.
 
 Download the synthetic example from Import dataset to see a complete file.
 

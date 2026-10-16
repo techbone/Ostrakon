@@ -17,9 +17,12 @@ of proven demand, uniqueness, or cryptographic anonymity.
 
 ## Build-time update
 
-The first local snapshot workbench is implemented. The live-provider gate has not
-passed; [probe outcomes](docs/PROVIDER_SPIKE.md) record failures without treating
-them as proof of a permanent outage. No real-chain end-to-end flow is claimed.
+The local snapshot workbench and bounded public-node export path are implemented.
+A live export of mainnet block 3,520,054 was cross-checked with CipherScan and
+loaded through the production browser's analyzer, graph and inspector. The
+[collection record](docs/LIVE_SNAPSHOT.md) contains provenance and replayable
+evidence. This passes the bounded snapshot data gate. Browser live address lookup,
+broader coverage, consensus verification and user demand remain unvalidated.
 
 Current [ZecBlock documentation](https://zecblock.com/docs) also lists privacy,
 linkability, graph, and pattern endpoints. This is direct competitive overlap with
@@ -77,9 +80,10 @@ expiry, refunds, minimum amounts, and delayed funding behavior have not been tes
 
 ## Remaining validation gates
 
-1. Find a browser-accessible data source with documented permission, historical
-   coverage, pagination, CORS, and usable limits. An address history alone cannot
-   support a chain-wide candidate search.
+1. For future live address lookup, establish a browser-accessible source with
+   documented permission, historical coverage, pagination, CORS and usable limits.
+   The operator snapshot route is proven for one block; it is not a chain-wide
+   candidate search or an address-history service.
 2. Evaluate modern pool accounting and false positives on known, consented or
    synthetic ground truth. Do not equate a pool's net balance change with one note.
 3. Compare current consumer tools and test the explanation with three intended

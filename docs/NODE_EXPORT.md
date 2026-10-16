@@ -4,8 +4,10 @@ The optional exporter turns a small block range into an Ostrakon dataset using
 read-only JSON-RPC. It requires Python 3.10+ and a synchronized Zebra or zcashd node
 with compatible RPC responses. No Python packages are required.
 
-This tool has offline regression coverage and an archived upstream mainnet
-fixture. A live node export has **not yet been verified** in this environment.
+The tool has offline regression coverage, an archived upstream mainnet fixture,
+and a [verified live collection of one modern mainnet block](LIVE_SNAPSHOT.md).
+That recorded operation includes resolved previous outputs and Ironwood accounting;
+it does not establish compatibility with every node release or production reliability.
 
 ## Run
 
