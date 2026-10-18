@@ -84,8 +84,8 @@ M3's engineering increment is complete; its three target-user walkthroughs are
 still pending. Use [the walkthrough protocol](docs/USER_WALKTHROUGHS.md) rather
 than treating automated or agent browser checks as human validation.
 
-Next engineering milestone: release readiness, including accessibility/privacy
-verification and Vercel preview preparation. Browser live lookup, broader provider
+Next engineering milestone: release readiness, including remaining accessibility/privacy
+verification. Browser live lookup, broader provider
 coverage, event registration/track and submission remain open.
 Any server proxy requires an explicit architecture/privacy change.
 
@@ -96,6 +96,16 @@ The deployed mainnet timeline, analysis worker, filters and security headers wer
 checked in the browser. No Vercel environment variables are required. The repository
 now includes an MIT license and matching package metadata; third-party notices
 remain in place. Human walkthroughs, broader release checks and submission remain open.
+
+## Demo checkpoint · 18 October
+
+A **1:57.83** narrated, captioned **1080p** judge walkthrough has been rendered
+and checked locally. It leads with recorded mainnet provenance, the seven-record
+timeline and exact Ironwood payout/fee accounting. Synthetic heuristic and timing
+examples have separate persistent labels. The [demo guide](docs/demo/README.md)
+provides the reproduction path, script, real app captures and media-production
+sources. Video upload, human walkthroughs, registration/track and submission are
+still pending; rendering the demo does not complete those tasks.
 
 ## Verification priorities
 

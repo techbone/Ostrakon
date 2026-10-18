@@ -73,6 +73,7 @@ Run the checks and production build locally before pushing.
 - [Architecture](ARCHITECTURE.md)
 - [Milestones](MILESTONES.md)
 - [Verification record](docs/VERIFICATION.md)
+- [Judge demo and mainnet verification path](docs/demo/README.md)
 - [Target-user walkthrough protocol](docs/USER_WALKTHROUGHS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Node export decision](docs/decisions/001-node-export.md)

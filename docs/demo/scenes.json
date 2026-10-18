@@ -1,0 +1,103 @@
+[
+  {
+    "id": "opening",
+    "kicker": "ZCASH PRIVACY WORKBENCH",
+    "title": "Privacy,\nin plain sight.",
+    "detail": "Ostrakon",
+    "tag": "PRODUCT DEMO",
+    "narration": "Shielded payments hide what matters. But public transaction patterns still need context. Ostrakon makes that evidence readable, without asking for a wallet key.",
+    "minimumSeconds": 7
+  },
+  {
+    "id": "mainnet",
+    "capture": "02-mainnet.png",
+    "kicker": "01 / REAL CHAIN DATA",
+    "title": "Mainnet.\nInspectable.",
+    "detail": "Block 3,520,054\n7 transactions\nCollected 16 Oct 2026",
+    "tag": "RECORDED MAINNET · NOT LIVE",
+    "narration": "Start with real Zcash mainnet data. This recording contains every transaction in block three million, five hundred twenty thousand, fifty four, collected on October sixteenth.",
+    "minimumSeconds": 10
+  },
+  {
+    "id": "provenance",
+    "capture": "03-provenance.png",
+    "crop": [375, 60, 905, 645],
+    "kicker": "02 / SHOW THE SOURCE",
+    "title": "Evidence you\ncan inspect.",
+    "detail": "Tatum Zebra RPC\nCipherScan comparison\nCommitted source records",
+    "tag": "RECORDED MAINNET · NOT LIVE",
+    "narration": "The source panel identifies the network, collection time, and coverage. Public fields were cross checked with CipherScan. Original responses and checksums are committed on GitHub. This is a snapshot, not live chain verification.",
+    "minimumSeconds": 12
+  },
+  {
+    "id": "timeline",
+    "capture": "13-mainnet-timeline.png",
+    "kicker": "03 / FOLLOW THE RECORD",
+    "title": "Every record\nhas a reason.",
+    "detail": "1 eligible\n6 excluded\n7 records retained",
+    "tag": "RECORDED MAINNET · NOT LIVE",
+    "narration": "The timeline retains all seven records. One fits the amount and time rule; six are excluded. Every exclusion has a reason. Eligibility alone never establishes a relationship.",
+    "minimumSeconds": 10
+  },
+  {
+    "id": "payout",
+    "capture": "05-payout.png",
+    "crop": [390, 225, 885, 630],
+    "kicker": "04 / EXACT ACCOUNTING",
+    "title": "A payout.\nNot a guess.",
+    "detail": "0.25015 ZEC pool outflow\n= 0.25 ZEC public payout\n+ 0.00015 ZEC fee",
+    "tag": "RECORDED MAINNET · NOT LIVE",
+    "narration": "Inspect the real Ironwood exit. The public payout is a quarter of a ZEC, plus a fifteen thousand zatoshi fee. Together, they explain the net pool outflow. Hidden note values remain hidden.",
+    "minimumSeconds": 12
+  },
+  {
+    "id": "exclusions",
+    "capture": "15-exclusion-explanation.png",
+    "crop": [390, 200, 885, 615],
+    "kicker": "05 / RESPECT WHAT IS HIDDEN",
+    "title": "A fee is not\na payment.",
+    "detail": "No transparent payout\nNo invented recipient\nNo anonymity verdict",
+    "tag": "RECORDED MAINNET · NOT LIVE",
+    "narration": "Another record exposes only a fee contribution, with no transparent payout. Ostrakon explains the exclusion instead of inventing a recipient. Zero matches in this block do not prove privacy.",
+    "minimumSeconds": 10
+  },
+  {
+    "id": "synthetic",
+    "capture": "14-synthetic-graph.png",
+    "kicker": "06 / UNDERSTAND THE SIGNAL",
+    "title": "A candidate.\nNot a claim.",
+    "detail": "Amount + time heuristic\nVisible supporting records\nOwnership unproven",
+    "tag": "SYNTHETIC LEARNING EXAMPLE",
+    "narration": "Now switch to an explicitly synthetic example. A dashed connection shows an amount and timing candidate. Supporting records explain why it appeared. This demonstrates the heuristic, not a mainnet finding.",
+    "minimumSeconds": 11
+  },
+  {
+    "id": "scenario",
+    "capture": "10-scenario.png",
+    "kicker": "07 / QUESTION THE RULE",
+    "title": "Change timing.\nKeep context.",
+    "detail": "Original: 1 candidate\nHypothetical: 0\nOriginal data unchanged",
+    "tag": "SYNTHETIC · HYPOTHETICAL TIMING",
+    "narration": "In the scenario lab, changing timing removes this candidate. The original dataset stays unchanged. Fewer matches describe this rule's limits; they do not certify anonymity.",
+    "minimumSeconds": 9
+  },
+  {
+    "id": "local",
+    "capture": "11-methodology.png",
+    "kicker": "08 / LOCAL BY DESIGN",
+    "title": "Your data.\nYour browser.",
+    "detail": "Browser worker analysis\nNo wallet keys or accounts\nLocal import + report export",
+    "tag": "BROWSER-LOCAL ANALYSIS",
+    "narration": "Analysis runs in a browser worker. No wallet keys, accounts, or dataset uploads. Import snapshots, inspect the evidence, and export a report you control.",
+    "minimumSeconds": 9
+  },
+  {
+    "id": "closing",
+    "kicker": "BUILT BY TECHBONE / OPEN SOURCE / MIT",
+    "title": "Make privacy\nunderstandable.",
+    "detail": "ostrakon-kappa.vercel.app\ngithub.com/techbone/Ostrakon",
+    "tag": "TRY THE MAINNET RECORDING",
+    "narration": "Try Ostrakon, load the recorded mainnet block, and inspect the evidence yourself. Open source, deployed, and built to make privacy understandable.",
+    "minimumSeconds": 8
+  }
+]
