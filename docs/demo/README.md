@@ -2,6 +2,8 @@
 
 ![Ostrakon title card](poster.png)
 
+[Watch the uploaded demo on YouTube](https://youtu.be/gIAtyuNJ6Ns).
+
 The video leads with the recorded mainnet integration, then uses an explicitly
 synthetic example to explain the correlation heuristic. These are actual captures
 of the deployed application, edited with explanatory titles, captions and motion;
@@ -15,8 +17,8 @@ underneath, with automatic volume reduction during speech and gentle fades.
 Ten representative frames were decoded for
 review; the encoded audio mix decoded successfully and every source narration
 clip contained non-silent samples. [Production metadata](production.json) records
-the final MP4 checksum. The MP4 is ready for review and upload; it has not been
-published to a video platform or submitted to the event.
+the final MP4 checksum. The video has been uploaded to YouTube; the public oEmbed
+endpoint returns the expected title. Event submission has not been confirmed.
 
 ## Judge verification path
 

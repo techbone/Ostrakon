@@ -107,7 +107,16 @@ timeline and exact Ironwood payout/fee accounting. Synthetic heuristic and timin
 examples have separate persistent labels. The [demo guide](docs/demo/README.md)
 provides the reproduction path, script, real app captures and media-production
 sources. Video upload, human walkthroughs, registration/track and submission are
-still pending; rendering the demo does not complete those tasks.
+were still pending at that checkpoint; rendering the demo does not complete those tasks.
+
+## Submission preparation · 18 October
+
+The user uploaded the [demo video](https://youtu.be/gIAtyuNJ6Ns). The repository
+is public according to GitHub's unauthenticated API, the deployed app returns
+HTTP 200, and YouTube's public oEmbed response identifies the expected upload.
+The README links all three entry points. Registration is shown as complete in
+the event form. [Submission details](docs/SUBMISSION.md) include the description
+and evidence path; final track selection and submitted status await confirmation.
 
 ## Verification priorities
 

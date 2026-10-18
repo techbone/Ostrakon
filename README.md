@@ -3,6 +3,10 @@
 A local Zcash privacy workbench. Inspect visible transaction patterns, explore
 possible amount/time correlations, and understand the limits of the evidence.
 
+[Try the app](https://ostrakon-kappa.vercel.app/) ·
+[Watch the demo](https://youtu.be/gIAtyuNJ6Ns) ·
+[Inspect the mainnet evidence](docs/LIVE_SNAPSHOT.md)
+
 ## Run
 
 Use Node.js 22.22.2+ on the 22.x line (or a newer release supported by the package's
@@ -74,13 +78,14 @@ Run the checks and production build locally before pushing.
 - [Milestones](MILESTONES.md)
 - [Verification record](docs/VERIFICATION.md)
 - [Judge demo and mainnet verification path](docs/demo/README.md)
+- [Submission details](docs/SUBMISSION.md)
 - [Target-user walkthrough protocol](docs/USER_WALKTHROUGHS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Node export decision](docs/decisions/001-node-export.md)
 
-ZECATHON's registration form was accessible on 16 October 2026. Published
-submissions close 28 October at 23:59 UTC (29 October at 00:59 Lagos). No event
-account was created; track eligibility and registration remain separate tasks.
+ZECATHON registration is shown as complete in the submission form. Submissions
+close 28 October at 23:59 UTC (29 October at 00:59 Lagos). Final track selection
+and submission confirmation remain pending.
 
 Git identity is repository-local: `techbone <musaawwaletudaye@gmail.com>`.
 Commit messages stay short. Do not use `--author`.
