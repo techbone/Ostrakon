@@ -1,126 +1,52 @@
-# Verification · local workbench v0.1
+# Verification
 
-Checked 16 October 2026.
+## Reproduce the checks
 
-## Automated
+```sh
+npm ci
+npm run check
+npm run build
+```
 
-- TypeScript strict compilation passed.
-- Vite production build passed; output is static assets plus a module worker.
-- 18 unit tests passed. Cases include competing candidates, no-match uncertainty,
-  pool mismatch, mixed/migration flows, missing amounts, unsupported versions,
-  low confirmations, timestamp windows, deterministic ordering, exact tolerance
-  boundaries, duplicate IDs, oversized input, report re-import and integer money.
-  Script outputs with no single decoded address retain their amount and do not
-  create repeated-address findings from null values (rule version 0.1.1).
-- npm install audit reports zero vulnerabilities after updating the test runner.
-- Git whitespace checks passed.
+The local suite uses public archived fixtures and synthetic transcripts. Exporter
+transport tests briefly open a loopback HTTP server; no external chain-data service
+is needed. Node.js and Python requirements are in the [README](../README.md).
 
-## Node exporter increment
+## Automated coverage
 
-- 17 Python tests cover exact decimal/integer amounts, all three pool signs and
-  fees, missing previous outputs, script addresses, parent caching, network/range
-  limits, block linkage/reorgs, output preservation and permissions, HTTP Basic
-  authentication, JSON-RPC errors over HTTP 500, blocked redirects, response IDs,
-  and request/time/response/output bounds.
-- Two additional integration tests execute Python normalization, validate its
-  output with the actual browser schema, and run the analysis engine. The synthetic
-  round trip produces one candidate; the archived mainnet coinbase produces none.
-  The analysis and export integration tests total 20 passing tests.
-- The archived [Zebra fixture](../tests/fixtures/ZEBRA_NOTICE.md) is pinned to a
-  source revision with a checksum and retained license. Its block 1 data verifies
-  historical response handling only. Modern-pool transcripts are synthetic.
-- A temporary loopback HTTP server exercises real HTTP transport. No external node
-  is needed for these tests. At this checkpoint the exporter had not been run
-  against a live node; the verified follow-up is recorded below.
+The 18 October 2026 check passes strict TypeScript compilation, **35 Vitest tests**,
+**23 Python tests** and the static Vite production build.
 
-## Dataset-switch regression
+| Area | Covered behavior |
+| --- | --- |
+| Schema and accounting | Exact zatoshis, pool signs, fees, bounds, duplicate IDs, contradictory block metadata and valid backwards clocks. |
+| Rules | Competing candidates, no-match uncertainty, amount/time boundaries, mixed flows, missing amounts, unsupported versions and exclusion reasons. |
+| Workspace | Dataset switching, stale/cancelled workers, pending classifications, report re-import and null-address handling. |
+| Timeline | Block grouping, deterministic ID order, combined filters, counts, resets and record inspection. |
+| Exporter | RPC authentication/errors, response IDs, bounds, pacing, safe rate-limit hints, blocked redirects, reorg checks, output preservation and permissions. |
+| Mainnet recording | Actual RPC replay, exact normalized export, second-source field comparison and evidence checksums. |
 
-The browser import of the archived fixture exposed a source-switch race: findings
-from the preceding dataset rendered against new transaction IDs before the worker
-effect cleared them. The evidence panel dereferenced a missing transaction.
-
-Results are now bound to the dataset, parameters and run that produced them.
-Retired or cancelled workers cannot publish results, and reports remain disabled
-until the current analysis finishes. Four DOM regression tests cover importing
-disjoint IDs and null addresses, late worker responses, changed rule settings and
-cancellation. The complete Vitest suite totals 24 tests. JSDOM is development-only.
-
-The import dialog and methodology now link to the node-export guide. Its updated
-layout was inspected in the production preview with the restrictive CSP.
+The [archived Zebra notice](../tests/fixtures/ZEBRA_NOTICE.md) retains the upstream
+fixture's provenance and license. Modern pool tests include synthetic transcripts
+and the separately identified [real mainnet recording](LIVE_SNAPSHOT.md).
 
 ## Browser checks
 
-- Default example produces one possible correlation and two repeated-address
-  findings, with a permanent coverage limitation.
-- Ambiguous example retains two candidate exits.
-- Timing lab changes two matches to zero at +12 hours; reset returns two. The
-  original dataset remains unchanged.
-- Invalid JSON structure reports a validation error and leaves the previous data.
-- A valid local JSON example loads through the native file chooser.
-- Transaction filtering shows an empty state; clearing restores six rows.
-- Transaction inspector displays exact 12.5001 ZEC input and 0.0001 ZEC fee.
-- Report download was read back and checked for dataset, rule version, parameters,
-  exclusions, and limitations.
-- At 390 × 844, document width equals viewport width (390 px); no horizontal page
-  overflow. Desktop and mobile layouts were visually inspected.
-- Production preview with the Vercel CSP successfully loads the module worker and
-  renders findings. Browser logs contain no errors or warnings in that check.
+Desktop and 390 × 844 mobile production-preview checks on 16 October covered
+recorded-data loading, provenance, exact payout/fee inspection, timeline filters,
+table scrolling, keyboard opening/closing, local import and report export.
+The module worker ran under the production CSP without console warnings or errors
+in those checks. The mobile page had no horizontal overflow.
 
-## Boundaries
+The deployed Vercel mainnet timeline, analysis worker, filters and security headers
+were checked on 18 October. The [demo guide](DEMO.md) provides the reproduction path.
 
-No browser live-chain lookup, independent consensus validation,
-external security audit, three-user walkthrough, deployed Vercel URL, or event
-submission has been verified. Privacy is enforced by local design and production
-`connect-src 'none'`; a complete browser network trace was not captured.
+## What these checks establish
 
-## Live mainnet increment
+Tests verify the application's rules and its handling of the recorded inputs.
+Mainnet collection rechecked node hashes and compared public fields with a second
+service. It does not independently verify consensus, transaction inclusion,
+current confirmations, reorg status, hidden ownership or anonymity.
 
-- A real nine-request export of mainnet block 3,520,054 completed on 16 October
-  at 18:25:03 UTC (19:25:03 Lagos), with all seven records and no unresolved inputs.
-  Range and original tip hashes were rechecked during collection.
-- CipherScan's recorded response agrees on the canonical hash, ordered IDs/count,
-  transaction versions, individual transparent addresses/values, totals, fees and
-  supported net pool balances. This is not independent consensus verification.
-- Three additional Python tests replay the real RPC results, compare public fields
-  against the second source, and verify the evidence checksums. Three transport
-  regressions cover request pacing and safe HTTP 429 hints. Python total: 23 tests.
-- The real snapshot runs through the browser schema/analyzer. It has one eligible
-  0.25015 ZEC Ironwood exit and zero candidate matches. Two shielded transactions
-  whose public net outflow pays fees are explicitly excluded; internal payments
-  remain hidden. Rule version 0.1.2 improves that explanation.
-- A DOM test verifies recorded-data labels, provenance and source switching.
-  Vitest total: 26 tests. Full local suite: **49 passing tests**, plus strict
-  TypeScript and the static production build.
-- In production preview under the CSP, the recorded dataset selector loads seven
-  records and one eligible flow. The inspector displays the real 0.25 ZEC payout
-  and 0.00015 ZEC fee. Provenance shows the recorded retrieval time, public source,
-  block interval, collection checks and explicit lack of live verification.
-  Browser console contains no warnings or errors in this check.
-- At 390 × 844, the recorded-data layout has a 390 px page width with no horizontal
-  overflow. The recorded-data selector, single-exit graph and coverage finding
-  remain available in the mobile layout.
-
-The source evidence and scope limits are in [LIVE_SNAPSHOT](LIVE_SNAPSHOT.md).
-
-## Timeline and exclusions increment
-
-- Rule 0.1.3 retains the previous eligibility criteria and adds stable first-reason
-  codes with reading guidance. Every record appears exactly once as eligible or
-  excluded; exclusions do not suppress address-reuse findings.
-- Nine additional regressions cover contradictory block metadata, legitimate
-  backwards clocks and equivalent timezones, grouping and ID ordering, combined
-  filters across views, pending classification, dataset-switch filter reset, and
-  inspection before analysis. Vitest now has 35 tests; Python retains 23.
-  **58 tests pass**, strict TypeScript passes, and the production build succeeds.
-- In production preview with the CSP, the seven-record mainnet block groups under
-  one header with 1 eligible and 6 excluded records. “No public payout” shows two
-  rows; combining a nonexistent ID gives zero in Table; clearing restores seven.
-- The real shielded record inspector shows no transparent inputs/outputs, an exact
-  0.0001 ZEC fee and Ironwood net outflow, its exclusion and reading guidance.
-- At 390 × 844, the timeline page width is 390 px with no horizontal page overflow.
-  Table remains inside its own scrolling container at the same page width.
-  Keyboard Enter opens a timeline record and Escape closes the inspector. Browser
-  console has no warnings/errors in these checks. No file upload or live provider
-  is needed for them.
-
-Target-user validation is still pending; see [the protocol](USER_WALKTHROUGHS.md).
+Automated and browser checks are engineering evidence. They are not an external
+security audit, full accessibility audit or completed participant usability study.

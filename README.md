@@ -1,96 +1,92 @@
 # Ostrakon
 
-A local Zcash privacy workbench. Inspect visible transaction patterns, explore
-possible amount/time correlations, and understand the limits of the evidence.
+**Privacy, in plain sight.** A browser-local Zcash workbench that turns public
+transaction patterns into inspectable evidence, possible correlations and clear
+coverage limits.
 
-[Try the app](https://ostrakon-kappa.vercel.app/) ·
-[Watch the demo](https://youtu.be/gIAtyuNJ6Ns) ·
-[Inspect the mainnet evidence](docs/LIVE_SNAPSHOT.md)
+[Open the app](https://ostrakon-kappa.vercel.app/) ·
+[Watch the 1:47 demo](https://youtu.be/gIAtyuNJ6Ns) ·
+[Verify the mainnet recording](docs/LIVE_SNAPSHOT.md)
 
-## Run
+![Ostrakon workbench showing the labeled synthetic learning example](docs/images/workbench.png)
 
-Use Node.js 22.22.2+ on the 22.x line (or a newer release supported by the package's
-`engines` field) and npm. The optional node exporter and full check suite
-also require Python 3.10+; no Python packages are needed.
+*The screenshot shows a synthetic learning example. The app also includes a
+separately labeled recording of real mainnet data.*
+
+## Try the mainnet recording
+
+1. Open the app and choose **Mainnet · 7 records · 16 Oct 2026**.
+2. Open **Transactions**: all seven records from block **3,520,054** remain
+   visible, with **1 eligible** and **6 excluded** from the amount/time rule.
+3. Inspect the eligible Ironwood exit: **0.25015 ZEC** net outflow equals a
+   **0.25 ZEC** public payout plus a **0.00015 ZEC** fee.
+4. Open **Dataset coverage** to inspect the source, collection time and limits.
+
+The [collection record](docs/LIVE_SNAPSHOT.md) links the original node responses,
+normalized export, CipherScan comparison and SHA-256 checksums. See the
+[demo guide](docs/DEMO.md) for the complete walkthrough.
+
+## What it does
+
+- Explore every loaded transaction in a block timeline or table, with eligibility,
+  exclusion-reason and ID/address filters.
+- Inspect repeated transparent address appearances and bounded amount/time
+  candidates. Competing matches stay visible; correlations do not assert ownership.
+- Read exact pool balances, fees, supporting records and rule explanations.
+- Change timing in a separate simulation while preserving the original data.
+- Import local JSON, export analysis reports, and re-import them for fresh analysis.
+- Create bounded snapshots with the optional [read-only node exporter](docs/NODE_EXPORT.md).
+
+Analysis uses integer zatoshis in a browser worker. There are no accounts, wallet
+connections, viewing/spending keys, analytics or automatic persistence. Imports
+remain in memory and disappear on refresh. The deployed frontend makes no
+chain-data requests; production CSP uses `connect-src 'none'`.
+
+## Scope and limits
+
+Ostrakon analyzes snapshots. The bundled mainnet dataset is a dated recording,
+not a live address scan or a wallet's history. Imported records are unverified;
+the browser does not verify consensus, chain inclusion, current confirmations
+or reorg status. Agreement between public services is not consensus verification.
+
+Amount/time rules compare eligible net pool movements, not hidden note values.
+Exclusion is not a privacy verdict, and zero matches do not establish anonymity.
+Synthetic examples are explicitly labeled. Input is bounded to **2 MB** and
+**200 transactions**; see the [data format](public/DATA_FORMAT.md).
+
+## Run locally
+
+Use Node.js **22.22.2+** on the 22.x line, or another version supported by
+`package.json`, and npm. The optional exporter and full check suite require
+Python **3.10+**, using only its standard library.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-The default port is 5173. If occupied, use `npm run dev -- --port 5178`.
+The development server runs at `http://127.0.0.1:5173`. Override the port with
+`npm run dev -- --port 5178` if needed.
 
 ```sh
-npm run check       # TypeScript + analysis/integration/exporter tests
-npm run build       # Production output in dist/
-npm run preview     # Production preview, including Vercel security headers
+npm run check       # TypeScript, analysis, UI and exporter tests
+npm run build       # Static production output in dist/
+npm run preview     # Production preview with Vercel security headers
 ```
 
-## What works
+Vercel configuration is included. The website requires no environment variables;
+optional node RPC settings are documented in the exporter guide.
 
-- Browser-worker analysis with exact integer zatoshi accounting.
-- Repeated transparent address appearances and bounded amount/time candidates.
-- All competing matches retained; no anonymity score or ownership assertion.
-- Interactive pool-flow graph, block timeline/table, evidence and provenance views.
-- Eligibility, exclusion-reason and ID/address filters with exact record counts.
-- Inspectable net pool balances and explanations of why each record is excluded.
-- Separate timing simulation that leaves the original dataset unchanged.
-- Local JSON imports, report downloads, and report re-import with fresh analysis.
-- Three explicitly synthetic examples, responsive layout, and keyboard controls.
-- A separately labeled [recorded mainnet snapshot](docs/LIVE_SNAPSHOT.md), exported
-  live and cross-checked against a second source. Choose **Mainnet · 7 records ·
-  16 Oct 2026** in the dataset selector; no chain requests occur in the browser.
-- Optional [read-only node exporter](docs/NODE_EXPORT.md) with bounded ranges,
-  exact amount conversion, previous-output resolution and snapshot hash checks.
-
-See [the dataset format](public/DATA_FORMAT.md). Inputs are limited to 2 MB and
-200 transactions. Refreshing clears imported data; nothing is saved automatically.
-
-## Current limits
-
-**This is a snapshot analyzer, not a live address scanner.** The bounded public-node
-export path is verified; direct browser lookup remains unimplemented. No backend
-or hidden proxy has been added.
-The application makes no chain-data requests, and production CSP uses
-`connect-src 'none'`. Imported records and source claims are unverified; there is
-no consensus, transaction-inclusion, current-confirmation, or live reorg validation
-in the browser. The optional exporter checks node responses for consistency and
-chain changes during collection. Its first live mainnet run is recorded with
-cross-source comparisons; that does not establish consensus validity or ongoing availability.
-
-The simple correlation rule excludes unresolved amounts, migrations, multiple
-pools, transparent change, batched exits, low-confirmation snapshots and unsupported
-versions. It compares net pool movements, not hidden note values. No-match results
-cannot establish privacy. See [validation](VALIDATION.md) and the
-[provider spike](docs/PROVIDER_SPIKE.md).
-
-## Architecture and delivery
-
-React + TypeScript + Vite, a dedicated Web Worker, Zod validation, and static assets.
-No account system, wallet connection, spending/viewing keys, analytics, external
-fonts, or application database. The static application is deployed on
-[Vercel](https://ostrakon-kappa.vercel.app/) with no environment variables required.
-Development commits are published to
-[GitHub](https://github.com/techbone/Ostrakon) in small, verified increments.
-Run the checks and production build locally before pushing.
+## Documentation
 
 - [Architecture](ARCHITECTURE.md)
-- [Milestones](MILESTONES.md)
-- [Verification record](docs/VERIFICATION.md)
-- [Judge demo and mainnet verification path](docs/demo/README.md)
-- [Submission details](docs/SUBMISSION.md)
-- [Target-user walkthrough protocol](docs/USER_WALKTHROUGHS.md)
+- [Mainnet evidence](docs/LIVE_SNAPSHOT.md)
+- [Demo walkthrough](docs/DEMO.md)
+- [Node exporter](docs/NODE_EXPORT.md)
+- [Verification and test coverage](docs/VERIFICATION.md)
 - [Contributing](CONTRIBUTING.md)
-- [Node export decision](docs/decisions/001-node-export.md)
-
-ZECATHON registration is shown as complete in the submission form. Submissions
-close 28 October at 23:59 UTC (29 October at 00:59 Lagos). Final track selection
-and submission confirmation remain pending.
-
-Git identity is repository-local: `techbone <musaawwaletudaye@gmail.com>`.
-Commit messages stay short. Do not use `--author`.
 
 ## License
 
 [MIT](LICENSE), copyright 2026 techbone. Third-party dependencies and archived
-source fixtures retain their own licenses and notices.
+fixtures retain their own licenses and notices.
