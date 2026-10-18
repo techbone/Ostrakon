@@ -64,8 +64,9 @@ cannot establish privacy. See [validation](VALIDATION.md) and the
 
 React + TypeScript + Vite, a dedicated Web Worker, Zod validation, and static assets.
 No account system, wallet connection, spending/viewing keys, analytics, external
-fonts, or application database. Vercel build/security configuration is included;
-deployment remains pending. Development commits are published to
+fonts, or application database. The static application is deployed on
+[Vercel](https://ostrakon-kappa.vercel.app/) with no environment variables required.
+Development commits are published to
 [GitHub](https://github.com/techbone/Ostrakon) in small, verified increments.
 Run the checks and production build locally before pushing.
 
@@ -82,3 +83,8 @@ account was created; track eligibility and registration remain separate tasks.
 
 Git identity is repository-local: `techbone <musaawwaletudaye@gmail.com>`.
 Commit messages stay short. Do not use `--author`.
+
+## License
+
+[MIT](LICENSE), copyright 2026 techbone. Third-party dependencies and archived
+source fixtures retain their own licenses and notices.

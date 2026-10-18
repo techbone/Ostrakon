@@ -86,8 +86,16 @@ than treating automated or agent browser checks as human validation.
 
 Next engineering milestone: release readiness, including accessibility/privacy
 verification and Vercel preview preparation. Browser live lookup, broader provider
-coverage, public licensing, event registration/track and submission remain open.
+coverage, event registration/track and submission remain open.
 Any server proxy requires an explicit architecture/privacy change.
+
+## Deployment and licensing checkpoint · 18 October
+
+The static application is live at [ostrakon-kappa.vercel.app](https://ostrakon-kappa.vercel.app/).
+The deployed mainnet timeline, analysis worker, filters and security headers were
+checked in the browser. No Vercel environment variables are required. The repository
+now includes an MIT license and matching package metadata; third-party notices
+remain in place. Human walkthroughs, broader release checks and submission remain open.
 
 ## Verification priorities
 
