@@ -117,8 +117,8 @@ def stamp(seconds):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--output", type=Path, default=ROOT/"exports/demo")
-    p.add_argument("--voice", default="Daniel")
-    p.add_argument("--rate", type=int, default=195)
+    p.add_argument("--voice", default="Samantha")
+    p.add_argument("--rate", type=int, default=175)
     p.add_argument("--reuse-audio", action="store_true")
     p.add_argument("--prepare-only", action="store_true")
     args=p.parse_args()
@@ -139,7 +139,7 @@ def main():
             seconds=f.getnframes()/f.getframerate()
         if seconds<0.5:
             raise SystemExit(f"Empty narration for {scene['id']}; enable local speech access.")
-        duration=math.ceil(max(scene["minimumSeconds"], seconds+0.85)*FPS)/FPS
+        duration=math.ceil(max(scene["minimumSeconds"], seconds+0.70)*FPS)/FPS
         base=base_frame(scene, i+1)
         chunks=caption_chunks(scene["narration"])
         total_chars=sum(len(c) for c in chunks)

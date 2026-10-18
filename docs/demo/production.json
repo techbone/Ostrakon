@@ -1,17 +1,17 @@
 {
-  "bytes": 11107111,
-  "decodedAudioBuffers": 353,
-  "decodedAudioBytes": 11251520,
-  "durationSeconds": 117.83333333333333,
+  "bytes": 11364193,
+  "decodedAudioBuffers": 359,
+  "decodedAudioBytes": 11355360,
+  "durationSeconds": 118.75,
   "fps": 24,
   "height": 1080,
   "reviewFrames": 10,
   "width": 1920,
-  "videoSha256": "132418d4893777e33606d812302af60fc463056ed2a1617520d33f52aec53e53",
+  "videoSha256": "835846c533f4549052b9db65ef024aa1f7baab30598c3f4002349a72ccb89ddd",
   "renderedAt": "2026-10-18",
   "captureSource": "https://ostrakon-kappa.vercel.app/",
   "applicationCommit": "0b7e690",
-  "narration": "Local synthetic voice: macOS Daniel, rate 195",
+  "narration": "Local synthetic voice: macOS Samantha, rate 175 (selected sample)",
   "format": "H.264 video / AAC audio; burned captions with SRT sidecar",
   "status": "Rendered and checked locally; not uploaded or submitted"
 }

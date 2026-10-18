@@ -8,7 +8,7 @@ of the deployed application, edited with explanatory titles, captions and motion
 they are not a continuous screen recording. Narration uses a local synthetic voice.
 No app UI or analysis result is fabricated for the video.
 
-The checked cut is **1:57.83**, **1920 × 1080**, **24 fps**, with H.264 video,
+The checked cut is **1:58.75**, **1920 × 1080**, **24 fps**, with H.264 video,
 AAC narration and burned captions. Ten representative frames were decoded for
 review; the encoded narration track decoded successfully and every source audio
 clip contained non-silent samples. [Production metadata](production.json) records
@@ -51,7 +51,7 @@ reorg status, ownership or anonymity. Tatum and CipherScan may share infrastruct
 Rendering requires macOS, Python 3.10+ with Pillow and the Swift command-line
 tools. Video and audio encoding use the built-in AVFoundation framework. These are
 optional video-production tools, not application dependencies. The default
-narration uses macOS `say` with Daniel;
+narration uses macOS `say` with the selected Samantha voice at rate 175;
 `--voice` and `--rate` allow a different installed voice and speaking rate. To use
 your own voice, provide one uncompressed PCM WAV file per scene ID under `exports/demo/audio/`
 and run with `--reuse-audio`.
