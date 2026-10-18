@@ -15,6 +15,7 @@ struct Scene: Decodable {
 struct Plan: Decodable {
     let width: Int; let height: Int; let fps: Int; let duration: Double
     let scenes: [Scene]
+    let mixdown: String?
 }
 func time(_ seconds: Double) -> CMTime { CMTime(seconds: seconds, preferredTimescale: 24000) }
 func image(_ path: String) throws -> CGImage {
@@ -105,11 +106,17 @@ let video = composition.addMutableTrack(withMediaType: .video, preferredTrackID:
 try video.insertTimeRange(CMTimeRange(start: .zero, duration: time(plan.duration)),
                           of: sourceVideo.tracks(withMediaType: .video)[0], at: .zero)
 let audio = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
-for scene in plan.scenes {
+if let master = plan.mixdown {
+    let asset = AVURLAsset(url: URL(fileURLWithPath: master))
+    guard let track = asset.tracks(withMediaType: .audio).first else { throw NSError(domain: "Demo", code: 4) }
+    try audio.insertTimeRange(CMTimeRange(start: .zero, duration: time(plan.duration)), of: track, at: .zero)
+} else {
+  for scene in plan.scenes {
     let asset = AVURLAsset(url: URL(fileURLWithPath: scene.audio))
     guard let track = asset.tracks(withMediaType: .audio).first else { throw NSError(domain: "Demo", code: 4) }
     try audio.insertTimeRange(CMTimeRange(start: .zero, duration: time(scene.audioSeconds)),
                                of: track, at: time(scene.start + scene.audioOffset))
+  }
 }
 let export = AVAssetExportSession(asset: composition, presetName: AVAssetExportPreset1920x1080)!
 export.outputURL = output

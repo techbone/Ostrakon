@@ -114,6 +114,37 @@ def stamp(seconds):
     return f"{ms//3600000:02}:{ms//60000%60:02}:{ms//1000%60:02},{ms%1000:03}"
 
 
+def prepare_narration(scene, audio, voice, rate):
+    sentences=re.split(r"(?<=[.!?])\s+",scene["narration"])
+    split=scene.get("pauseAfterSentence",len(sentences))
+    phrases=[" ".join(sentences[:split])," ".join(sentences[split:])]
+    phrases=[text for text in phrases if text]
+    pause=scene.get("pauseSeconds",0.65)
+    segments=[]
+    pcm=bytearray()
+    for j,text in enumerate(phrases):
+        part=audio.with_name(f"{audio.stem}-{j:02}.wav")
+        subprocess.run(["say","-v",voice,"-r",str(rate),"-o",str(part),
+                        "--data-format=LEI16@24000",text],check=True)
+        with wave.open(str(part),"rb") as f:
+            if f.getframerate()!=24000 or f.getnchannels()!=1 or f.getsampwidth()!=2:
+                raise ValueError("Unexpected narration format")
+            duration=f.getnframes()/24000
+            data=f.readframes(f.getnframes())
+        if duration<0.3:
+            raise ValueError(f"Empty narration for {scene['id']}")
+        segments.append({"text":text,"start":len(pcm)/48000,"duration":duration})
+        pcm.extend(data)
+        if j<len(phrases)-1:
+            pcm.extend(b"\0\0"*round(pause*24000))
+    with wave.open(str(audio),"wb") as f:
+        f.setnchannels(1)
+        f.setsampwidth(2)
+        f.setframerate(24000)
+        f.writeframes(pcm)
+    audio.with_suffix(".timing.json").write_text(json.dumps(segments,indent=2)+"\n")
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--output", type=Path, default=ROOT/"exports/demo")
@@ -121,6 +152,7 @@ def main():
     p.add_argument("--rate", type=int, default=175)
     p.add_argument("--reuse-audio", action="store_true")
     p.add_argument("--prepare-only", action="store_true")
+    p.add_argument("--no-music", action="store_true",help="Render narration without the original score")
     args=p.parse_args()
     out=args.output.resolve()
     for sub in ("audio", "frames"):
@@ -133,41 +165,56 @@ def main():
     for i, scene in enumerate(scenes):
         audio=out/"audio"/f"{scene['id']}.wav"
         if not args.reuse_audio:
-            subprocess.run(["say", "-v", args.voice, "-r", str(args.rate),
-                            "-o", str(audio), "--data-format=LEI16@24000", scene["narration"]], check=True)
+            prepare_narration(scene,audio,args.voice,args.rate)
         with wave.open(str(audio), "rb") as f:
             seconds=f.getnframes()/f.getframerate()
         if seconds<0.5:
             raise SystemExit(f"Empty narration for {scene['id']}; enable local speech access.")
-        duration=math.ceil(max(scene["minimumSeconds"], seconds+0.70)*FPS)/FPS
+        lead=scene.get("leadSeconds",0.6)
+        tail=scene.get("tailSeconds",0.9)
+        duration=math.ceil(max(scene["minimumSeconds"],lead+seconds+tail)*FPS)/FPS
         base=base_frame(scene, i+1)
-        chunks=caption_chunks(scene["narration"])
-        total_chars=sum(len(c) for c in chunks)
-        caption_cursor=0.25
+        timing=audio.with_suffix(".timing.json")
+        if timing.exists():
+            segments=json.loads(timing.read_text())
+            if " ".join(s["text"] for s in segments)!=scene["narration"]:
+                raise ValueError(f"Stale narration timing for {scene['id']}; regenerate audio")
+            if abs(segments[-1]["start"]+segments[-1]["duration"]-seconds)>0.05:
+                raise ValueError(f"Audio changed for {scene['id']}; remove its timing sidecar")
+        else:
+            segments=[{"text":scene["narration"],"start":0,"duration":seconds}]
         frames=[]
         blank=out/"frames"/f"{i:02}-blank.png"
         base.save(blank)
         frames.append({"start":0, "path":str(blank)})
-        for j, chunk in enumerate(chunks):
-            length=seconds*len(chunk)/total_chars
-            start=cursor+caption_cursor
-            end=min(cursor+seconds+0.25, start+length)
-            subtitle_entries.append(f"{len(subtitle_entries)+1}\n{stamp(start)} --> {stamp(end)}\n{chunk}\n")
-            path=out/"frames"/f"{i:02}-{j:02}.png"
-            caption_frame(base, chunk).save(path)
-            frames.append({"start":caption_cursor, "path":str(path)})
-            caption_cursor+=length
-        frames.append({"start":seconds+0.25,"path":str(blank)})
+        for j,segment in enumerate(segments):
+            caption_cursor=lead+segment["start"]
+            chunks=caption_chunks(segment["text"])
+            total_chars=sum(len(c) for c in chunks)
+            for k,chunk in enumerate(chunks):
+                length=segment["duration"]*len(chunk)/total_chars
+                start=cursor+caption_cursor
+                end=min(cursor+lead+segment["start"]+segment["duration"],start+length)
+                subtitle_entries.append(f"{len(subtitle_entries)+1}\n{stamp(start)} --> {stamp(end)}\n{chunk}\n")
+                path=out/"frames"/f"{i:02}-{j:02}-{k:02}.png"
+                caption_frame(base,chunk).save(path)
+                frames.append({"start":caption_cursor,"path":str(path)})
+                caption_cursor+=length
+            frames.append({"start":lead+segment["start"]+segment["duration"],"path":str(blank)})
         plan.append({"id":scene["id"],"start":cursor,"duration":duration,
-                     "audio":str(audio),"audioOffset":0.25,"audioSeconds":seconds,"frames":frames})
+                     "audio":str(audio),"audioOffset":lead,"audioSeconds":seconds,
+                     "speechSegments":segments,"frames":frames})
         review.append(base)
         cursor+=duration
         print(f"{scene['id']}: {duration:.2f}s ({seconds:.2f}s narration)", flush=True)
     if cursor>120:
         raise SystemExit(f"Cut is {cursor:.2f}s; increase --rate or shorten narration to meet 120s.")
     (out/"captions.srt").write_text("\n".join(subtitle_entries))
-    (out/"render-plan.json").write_text(json.dumps({"width":W,"height":H,"fps":FPS,
-                                                "duration":cursor,"scenes":plan}, indent=2))
+    render_plan={"width":W,"height":H,"fps":FPS,"duration":cursor,"scenes":plan}
+    if not args.no_music:
+        from music import build_soundtrack
+        render_plan["mixdown"],render_plan["soundtrack"]=build_soundtrack(render_plan,out)
+    (out/"render-plan.json").write_text(json.dumps(render_plan,indent=2))
     review[0].save(out/"poster.png")
     sheet=Image.new("RGB",(960,270*5),PAPER)
     for i, frame in enumerate(review):

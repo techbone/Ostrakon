@@ -99,8 +99,10 @@ remain in place. Human walkthroughs, broader release checks and submission remai
 
 ## Demo checkpoint · 18 October
 
-A **1:58.75** narrated, captioned **1080p** judge walkthrough has been rendered
-with Samantha narration and checked locally. It leads with recorded mainnet provenance, the seven-record
+A **1:47.50** narrated, captioned **1080p** judge walkthrough has been rendered
+with Samantha narration, deliberate pauses and an original instrumental beat.
+The score dips under speech and rises during reading holds; the audio levels and
+encoded media were checked locally. It leads with recorded mainnet provenance, the seven-record
 timeline and exact Ironwood payout/fee accounting. Synthetic heuristic and timing
 examples have separate persistent labels. The [demo guide](docs/demo/README.md)
 provides the reproduction path, script, real app captures and media-production

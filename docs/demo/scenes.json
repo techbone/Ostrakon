@@ -5,7 +5,9 @@
     "title": "Privacy,\nin plain sight.",
     "detail": "Ostrakon",
     "tag": "PRODUCT DEMO",
-    "narration": "Shielded payments hide what matters. But public transaction patterns still need context. Ostrakon makes that evidence readable, without asking for a wallet key.",
+    "narration": "Shielded payments hide what matters. Public patterns still need context. Ostrakon makes the evidence readable, without a wallet key.",
+    "pauseAfterSentence": 1,
+    "leadSeconds": 1.2,
     "minimumSeconds": 7
   },
   {
@@ -15,7 +17,8 @@
     "title": "Mainnet.\nInspectable.",
     "detail": "Block 3,520,054\n7 transactions\nCollected 16 Oct 2026",
     "tag": "RECORDED MAINNET · NOT LIVE",
-    "narration": "Start with real Zcash mainnet data. This recording contains every transaction in block three million, five hundred twenty thousand, fifty four, collected on October sixteenth.",
+    "narration": "Real, recorded Zcash mainnet data. All seven transactions from this block, collected on October sixteenth.",
+    "pauseAfterSentence": 1,
     "minimumSeconds": 10
   },
   {
@@ -26,7 +29,8 @@
     "title": "Evidence you\ncan inspect.",
     "detail": "Tatum Zebra RPC\nCipherScan comparison\nCommitted source records",
     "tag": "RECORDED MAINNET · NOT LIVE",
-    "narration": "The source panel identifies the network, collection time, and coverage. Public fields were cross checked with CipherScan. Original responses and checksums are committed on GitHub. This is a snapshot, not live chain verification.",
+    "narration": "The source panel shows the network and collection time. CipherScan agreed on public fields. Responses and checksums are on GitHub. A snapshot, not live verification.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 12
   },
   {
@@ -36,7 +40,8 @@
     "title": "Every record\nhas a reason.",
     "detail": "1 eligible\n6 excluded\n7 records retained",
     "tag": "RECORDED MAINNET · NOT LIVE",
-    "narration": "The timeline retains all seven records. One fits the amount and time rule; six are excluded. Every exclusion has a reason. Eligibility alone never establishes a relationship.",
+    "narration": "All seven records stay visible. One fits the comparison rule; six are excluded. Each exclusion has a reason.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 10
   },
   {
@@ -47,7 +52,8 @@
     "title": "A payout.\nNot a guess.",
     "detail": "0.25015 ZEC pool outflow\n= 0.25 ZEC public payout\n+ 0.00015 ZEC fee",
     "tag": "RECORDED MAINNET · NOT LIVE",
-    "narration": "Inspect the real Ironwood exit. The public payout is a quarter of a ZEC, plus a fifteen thousand zatoshi fee. Together, they explain the net pool outflow. Hidden note values remain hidden.",
+    "narration": "A real Ironwood exit. A quarter of a ZEC goes to the public recipient. The fee explains the remaining outflow. Hidden note values stay hidden.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 12
   },
   {
@@ -58,7 +64,8 @@
     "title": "A fee is not\na payment.",
     "detail": "No transparent payout\nNo invented recipient\nNo anonymity verdict",
     "tag": "RECORDED MAINNET · NOT LIVE",
-    "narration": "Another record exposes only a fee contribution, with no transparent payout. Ostrakon explains the exclusion instead of inventing a recipient. Zero matches in this block do not prove privacy.",
+    "narration": "Here, only the fee contribution is public. There is no transparent payout. No matches does not prove privacy.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 10
   },
   {
@@ -68,7 +75,8 @@
     "title": "A candidate.\nNot a claim.",
     "detail": "Amount + time heuristic\nVisible supporting records\nOwnership unproven",
     "tag": "SYNTHETIC LEARNING EXAMPLE",
-    "narration": "Now switch to an explicitly synthetic example. A dashed connection shows an amount and timing candidate. Supporting records explain why it appeared. This demonstrates the heuristic, not a mainnet finding.",
+    "narration": "Now, a clearly labeled synthetic example. The dashed line shows an amount and timing candidate. The records explain why. Ownership remains unproven.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 11
   },
   {
@@ -78,7 +86,8 @@
     "title": "Change timing.\nKeep context.",
     "detail": "Original: 1 candidate\nHypothetical: 0\nOriginal data unchanged",
     "tag": "SYNTHETIC · HYPOTHETICAL TIMING",
-    "narration": "In the scenario lab, changing timing removes this candidate. The original dataset stays unchanged. Fewer matches describe this rule's limits; they do not certify anonymity.",
+    "narration": "Change the timing, and the candidate disappears. Your original data stays untouched. Fewer matches do not certify anonymity.",
+    "pauseAfterSentence": 1,
     "minimumSeconds": 9
   },
   {
@@ -88,7 +97,8 @@
     "title": "Your data.\nYour browser.",
     "detail": "Browser worker analysis\nNo wallet keys or accounts\nLocal import + report export",
     "tag": "BROWSER-LOCAL ANALYSIS",
-    "narration": "Analysis runs in a browser worker. No wallet keys, accounts, or dataset uploads. Import snapshots, inspect the evidence, and export a report you control.",
+    "narration": "Analysis stays in your browser. No keys, accounts, or dataset uploads. Import a snapshot, inspect it, and export your report.",
+    "pauseAfterSentence": 2,
     "minimumSeconds": 9
   },
   {
@@ -97,7 +107,10 @@
     "title": "Make privacy\nunderstandable.",
     "detail": "ostrakon-kappa.vercel.app\ngithub.com/techbone/Ostrakon",
     "tag": "TRY THE MAINNET RECORDING",
-    "narration": "Try Ostrakon, load the recorded mainnet block, and inspect the evidence yourself. Open source, deployed, and built to make privacy understandable.",
+    "narration": "Try Ostrakon. Inspect the recorded mainnet evidence yourself. Privacy, in plain sight.",
+    "pauseAfterSentence": 2,
+    "pauseSeconds": 0.85,
+    "tailSeconds": 2.0,
     "minimumSeconds": 8
   }
 ]
